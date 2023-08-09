@@ -1,0 +1,59 @@
+{% extends 'authusers/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1>SignIn Form</h1>
+
+<form action="" method="POST" novalidate>
+    {% csrf_token %}
+
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+        <input type="email" id="form3Example3" class="form-control" name="{{ form.username.name }}" />
+        <label class="form-label" for="form3Example3">{{ form.username.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+        <small class="text-error">{{ form.username.errors|striptags }}</small>
+    </div>
+
+    <!-- Password input -->
+    <div class="form-outline mb-4">
+        <input type="password" id="form3Example4" class="form-control" name="{{ form.password.name }}" />
+        <label class="form-label" for="form3Example4">{{ form.password.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+        <small class="text-error">{{ form.password.errors|striptags }}</small>
+    </div>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-dark btn-block mb-4">Sign In</button>
+    <div style="text-align: right;">
+        <a href="{% url 'coreapp:index' %}" class="btn btn-dark mt-3">Back to Website</a>
+    </div>
+    <br>
+
+    <!-- authetication errors -->
+
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">
+        {{ form.non_field_errors }}
+    </div>
+    {% endif %}
+    <!-- end auth errors -->
+    <br>
+
+    <!-- user defind errors -->
+    {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{message.tags}}"id="errorAlert" role="alert">
+		{{message}}
+	</div>
+    {% endfor %}
+    {% endif %}
+    <!-- end user defind errors -->
+        
+
+
+</form>
+
+{% endblock %}

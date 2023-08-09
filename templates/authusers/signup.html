@@ -1,0 +1,68 @@
+{% extends 'authusers/base.html' %}
+{% load static %}
+{% comment %} {% load phonenumber_fields %} {% endcomment %}
+
+{% block content %}
+  <h1>SignUp Form</h1>
+  <form action="" method="POST" novalidate>
+    {% csrf_token %}
+
+    <!-- Username input -->
+    <div class="form-outline mb-4">
+      <input type="text" id="form3Example1" class="form-control" name="{{ form.username.name }}" />
+      <label class="form-label" for="form3Example1">{{ form.username.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+      <small class="text-error">{{ form.username.errors|striptags }}</small>
+    </div>
+
+    <!-- Email input -->
+    <div class="form-outline mb-4">
+      <input type="email" id="form3Example3" class="form-control" name="{{ form.email.name }}" />
+      <label class="form-label" for="form3Example3">{{ form.email.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+      <small class="text-error">{{ form.email.errors|striptags }}</small>
+    </div>
+
+    <!-- user phone number  -->
+    <div class="form-outline mb-4">
+      <input type="tel" id="form3Example1" class="form-control" name="{{ form.user_phone.name }}" />
+      <label class="form-label" for="form3Example1">{{ form.user_phone.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+      <small class="text-error">{{ form.user_phone.errors|striptags }}</small>
+    </div>
+
+    <!-- Password inputs -->
+    <div class="form-outline mb-4">
+      <input type="password" id="form3Example4" class="form-control" name="{{ form.password1.name }}" />
+      <label class="form-label" for="form3Example4">{{ form.password1.label }}</label>
+    </div>
+    <div  style="color: red; text-align: left;">
+        <small class="text-error">{{ form.password1.errors|striptags }}</small>
+    </div>
+
+    <!-- 2nd password -->
+    <div class="form-outline mb-4">
+      <input type="password" id="form3Example5" class="form-control" name="{{ form.password2.name }}" />
+      <label class="form-label" for="form3Example5">{{ form.password2.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+        <small class="text-error">{{ form.password2.errors|striptags }}</small>
+    </div>
+    
+
+    <!-- Checkbox -->
+   <p>Already Have and account?<a href="{% url 'sign-in' %}" style="color: black; font-style: italic;"> Login</a></p>
+
+    <!-- Submit button -->
+    <button type="submit" class="btn btn-dark btn-block mb-4">Sign up</button>
+    <div style="text-align: right;">
+        <a href="{% url 'coreapp:index' %}" class="btn btn-dark mt-3">Back to Website</a>
+    </div>
+    <br>
+  </form>
+
+  
+{% endblock %}
