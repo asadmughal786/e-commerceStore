@@ -7,12 +7,12 @@ from django.contrib import messages
 
 def register_view(request):
     if request.method == 'POST':
-        print("----------------> getting the request", dict(request.POST.items()))
-        request_data = dict(request.POST.items())
+        # print("----------------> getting the request", dict(request.POST.items()))
+        # request_data = dict(request.POST.items())
         form = SignUpForm(request.POST or None)
 
-        print('Boolean------>',request_data is form.data)
-        print('Form Data: ', form.data)
+        # print('Boolean------>',request_data is form.data)
+        # print('Form Data: ', form.data)
         if form.is_valid():
 
             form.save()
@@ -24,8 +24,7 @@ def register_view(request):
                                     password=form.cleaned_data['password1'])
             login(request,new_user)
             return redirect('/')
-        else:
-            print(form.errors)
+        
     else:
         form = SignUpForm()
 
