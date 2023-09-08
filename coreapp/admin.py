@@ -10,38 +10,40 @@ admin.site.unregister(Group)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ['id', 'name', 'avatar_tag', 'created_at', 'updated_at']
+    list_display = ['name', 'avatar_tag', 'created_at', 'updated_at']
 
     def avatar_tag(self, obj):
         if obj.image:
-            return format_html('<img src="{}"  align = "middle" width="60px" height="60px"/>'.format(obj.image.url))
+            return format_html( f'<img src="{obj.image.url}"  align = "middle" width="60px" height="60px"/>')
         else:
             return "No Image"
     avatar_tag.short_description = 'Avatar'
 
-# @admin.register(SubCategory)
-# class SubCategoryAdmin(admin.ModelAdmin):
-#     list_display=['id','sub_title','category']
+# ------------------------------------- Products ----------------------------------------------
 
+class ProductImagesAdmin(admin.TabularInline):
+    model = ProductImages
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ['category', 'title', 'avatar_tag',
+    
+    inlines = [ProductImagesAdmin]
+    list_display = ['title', 'avatar_tag',
                     'in_stock', 'qty', 'warrenty', 'description', 'category']
-
+    fieldsets =(
+        ("General Information",{'fields':('pid','sku','avatar_tag','prod_image','title','category','specification','description','qty','price','old_price','warrenty','in_stock','product_status')}),
+    )
+    readonly_fields = ['pid','sku','avatar_tag']
+    
     def avatar_tag(self, obj):
         if obj.prod_image:
-            return format_html('<img src="{}" align = "middle" width="100px" height="100px"/>'.format(obj.prod_image.url))
+            return format_html( f'<img src="{obj.prod_image.url}"  align = "middle" width="60px" height="60px"/>')
         else:
-            return "No Image"
+            
+            return 'No image'
     avatar_tag.short_description = 'Avatar'
-
-
-@admin.register(ProductImages)
-class ProductImagesAdmin(admin.ModelAdmin):
-    list_display = ['product', 'images']
-
-
+    avatar_tag.allow_tags = True
+    
 @admin.register(CartOrders)
 class ProductAdmin(admin.ModelAdmin):
     list_display = ['user', 'price', 'payment_status',
