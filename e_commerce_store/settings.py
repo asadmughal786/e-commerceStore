@@ -173,7 +173,7 @@ JAZZMIN_SETTINGS = {
     "welcome_sign": "Welcome to NIAZI MOBILE CENTER Admin Panel",
 
     # Copyright on the footer
-    "copyright": "ERPProLeads",
+    "copyright": "ERPProDevelopers",
     
 
     # List of model admins to search from the search bar, search bar omitted if excluded
