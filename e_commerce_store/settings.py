@@ -64,6 +64,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'coreapp.context_processor.default',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -145,13 +146,13 @@ AUTH_USER_MODEL = 'authusers.User'
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "E-Commerce Admin",
+    "site_title": "NIAZI MOBILE",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "E-Commerce Website",
+    "site_header": "NIAZI MOBILE",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "",
+    "site_brand": "NIAZI MOBILE",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "img/sitelogo.png",
@@ -169,10 +170,10 @@ JAZZMIN_SETTINGS = {
     "site_icon": "img/sitelogo.png",
 
     # Welcome text on the login screen
-    "welcome_sign": "Welcome to the E-Commerce Admin Panel",
+    "welcome_sign": "Welcome to NIAZI MOBILE CENTER Admin Panel",
 
     # Copyright on the footer
-    "copyright": "Pythonworld",
+    "copyright": "ERPProLeads",
     
 
     # List of model admins to search from the search bar, search bar omitted if excluded

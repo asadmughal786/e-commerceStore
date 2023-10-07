@@ -29,7 +29,7 @@ class ProductAdmin(admin.ModelAdmin):
     
     inlines = [ProductImagesAdmin]
     list_display = ['title', 'avatar_tag',
-                    'in_stock', 'qty', 'warrenty', 'description', 'category']
+                    'in_stock', 'qty', 'warrenty', 'price', 'category', 'product_status']
     fieldsets =(
         ("General Information",{'fields':('pid','sku','avatar_tag','prod_image','title','category','specification','description','qty','price','old_price','warrenty','in_stock','product_status')}),
     )

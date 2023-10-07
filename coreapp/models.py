@@ -1,7 +1,8 @@
 from django.db import models
 from authusers.models import User
 from shortuuid.django_fields import ShortUUIDField
-import os
+# import os
+from PIL import Image
 
 
 # Create your models here.
@@ -40,6 +41,7 @@ class BaseModel(models.Model):
 
 
 class Category(BaseModel):
+    
     cid = ShortUUIDField(unique=True, length=10, max_length=30,
                         prefix='cat', alphabet='abcdef12345')
     image = models.ImageField(upload_to='Category Images', null=True)
@@ -50,7 +52,18 @@ class Category(BaseModel):
 
     def __str__(self):
         return self.name
+    
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.image.path)
+        print('\n\nActual Image size conversion--->>> ', img.size)
 
+        # Resize the image as needed
+        output_size = (200, 200)  # Set your desired size
+        img = img.resize(output_size)
+        print('Image size : --->>>',img.size)
+        img.save(self.image.path)
+        
 # ------------------------------------ Product --------------------------
 
 
@@ -60,7 +73,7 @@ class Product(BaseModel):
         Category, on_delete=models.CASCADE, default=None)
 
     pid = ShortUUIDField(unique=True, length=10, max_length=30,
-                         prefix='scat', alphabet='abcdef12345')
+                        prefix='scat', alphabet='abcdef12345')
     title = models.CharField(max_length=100, default='New Product')
     specification = models.TextField(
         null=True, blank=True, default='No description')
@@ -93,6 +106,18 @@ class Product(BaseModel):
 
     def get_percentage(self):
         return (self.price/self.old_price) * 100
+    
+    # Resizing the image on upload
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.prod_image.path)
+        print('\n\nActual Image size conversion--->>> ', img.size)
+
+        # Resize the image as needed
+        output_size = (600, 600)  # Set your desired size
+        img = img.resize(output_size)
+        print('Image size : --->>>',img.size)
+        img.save(self.prod_image.path)
 
 
 class ProductImages(models.Model):
@@ -100,8 +125,18 @@ class ProductImages(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
-    class Meta:
+    class Meta: 
         verbose_name_plural = 'Product Images'
+        
+        # Resizing the image on upload
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        img = Image.open(self.images.path)
+
+        # Resize the image as needed
+        output_size = (600, 600)  # Set your desired size
+        img.thumbnail(output_size)
+        img.save(self.images.path)
 
 
 #############################################  Cart, Orders, OrderItems, Address ########################################################
