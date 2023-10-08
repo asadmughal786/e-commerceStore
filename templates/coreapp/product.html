@@ -120,7 +120,13 @@
                 <a data-toggle="tab" href="#tab2">Details</a>
               </li>
               <li>
-                <a data-toggle="tab" href="#tab3">Reviews (3)</a>
+                <a data-toggle="tab" href="#tab3">Reviews (
+                {% if product_review %}
+                  {{product_review.count}}
+                  {% else %}
+                  0
+                {% endif %}
+                  )</a>
               </li>
             </ul>
             <!-- /product tab nav -->
@@ -131,7 +137,7 @@
               <div id="tab1" class="tab-pane fade in active">
                 <div class="row">
                   <div class="col-md-12">
-                    <p>{{ products.description }}</p>
+                    <p>{{ products.description | safe }}</p>
                   </div>
                 </div>
               </div>
@@ -141,7 +147,7 @@
               <div id="tab2" class="tab-pane fade in">
                 <div class="row">
                   <div class="col-md-12">
-                    <p>{{ products.specification }}</p>
+                    <p>{{ products.specification | safe }}</p>
                   </div>
                 </div>
               </div>
@@ -154,7 +160,7 @@
                   <div class="col-md-3">
                     <div id="rating">
                       <div class="rating-avg">
-                        <span>4.5</span>
+                        <span>{{average_rating.rating|floatformat:"1"}}</span>
                         <div class="rating-stars">
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
@@ -238,54 +244,39 @@
                   <div class="col-md-6">
                     <div id="reviews">
                       <ul class="reviews">
-                        <li>
+                        
+                          
+                          
+                          {% if product_review %}
+                          {% for reviews in product_review %}
+                          <li>
                           <div class="review-heading">
-                            <h5 class="name">John</h5>
-                            <p class="date">27 DEC 2018, 8:0 PM</p>
+
+                            <h5 class="name">{{reviews.user.username | title}}</h5>
+                            <p class="date">{{reviews.date| date:"d M, Y"}}</p>
+
                             <div class="review-rating">
+                              
+                              {% for s in reviews.ratings|ljust:reviews.ratings %}
                               <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star-o empty"></i>
+                              {% endfor %}
+                                
                             </div>
                           </div>
+
                           <div class="review-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                            <p>{{reviews.review}}</p>
                           </div>
-                        </li>
-                        <li>
-                          <div class="review-heading">
-                            <h5 class="name">John</h5>
-                            <p class="date">27 DEC 2018, 8:0 PM</p>
-                            <div class="review-rating">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star-o empty"></i>
-                            </div>
-                          </div>
+                          </li>
+                            
+                          {% endfor %}
+                          {% else %}
                           <div class="review-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
+                            <p><i>No Reviews</i></p>
                           </div>
-                        </li>
-                        <li>
-                          <div class="review-heading">
-                            <h5 class="name">John</h5>
-                            <p class="date">27 DEC 2018, 8:0 PM</p>
-                            <div class="review-rating">
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star"></i>
-                              <i class="fa fa-star-o empty"></i>
-                            </div>
-                          </div>
-                          <div class="review-body">
-                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</p>
-                          </div>
-                        </li>
+                          {% endif %}
+                            
+                          
                       </ul>
                       <ul class="reviews-pagination">
                         <li class="active">1</li>
@@ -307,24 +298,32 @@
                   <!-- /Reviews -->
 
                   <!-- Review Form -->
+                  
                   <div class="col-md-3">
+                    
                     <div id="review-form">
-                      <form class="review-form">
-                        <input class="input" type="text" placeholder="Your Name" />
-                        <input class="input" type="email" placeholder="Your Email" />
-                        <textarea class="input" placeholder="Your Review"></textarea>
-                        <div class="input-rating">
-                          <span>Your Rating:</span>
-                          <div class="stars">
-                            <input id="star5" name="rating" value="5" type="radio" /><label for="star5"></label>
-                            <input id="star4" name="rating" value="4" type="radio" /><label for="star4"></label>
-                            <input id="star3" name="rating" value="3" type="radio" /><label for="star3"></label>
-                            <input id="star2" name="rating" value="2" type="radio" /><label for="star2"></label>
-                            <input id="star1" name="rating" value="1" type="radio" /><label for="star1"></label>
-                          </div>
+                      {% if request.user.is_authenticated %}
+                     {% if  make_review == True %}  
+                     <h5>Review Form</h5>
+                     <form class="review-form hide-review-form" action="{% url 'coreapp:ajax-add-review' products.id %}" method= 'POST' id="reviewForm">
+                      {% csrf_token %}
+                      {{product_review_form.review}}
+                      {% comment %} <textarea class="input" placeholder="Your Review"></textarea> {% endcomment %}
+                      <div class="input-rating">
+                        <span>Your Rating:</span>
+                        <div class="stars">
+                          {{product_review_form.ratings}}
                         </div>
-                        <button class="primary-btn">Submit</button>
-                      </form>
+                      </div>
+                      <button class="primary-btn">Submit</button>
+                    </form>
+                    <br>
+                      <strong class="text-added" id="reviewResponse"></strong>
+                      
+                     {% endif %}
+                     {% endif %}
+                      
+                      
                     </div>
                   </div>
                   <!-- /Review Form -->
@@ -355,7 +354,7 @@
           </div>
         </div>
 
-        <!-- product -->
+        <!--related product -->
         <div class="col-md-3 col-xs-6">
           {% if related_products %}
             {% for product in related_products %}

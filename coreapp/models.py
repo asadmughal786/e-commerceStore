@@ -3,6 +3,9 @@ from authusers.models import User
 from shortuuid.django_fields import ShortUUIDField
 # import os
 from PIL import Image
+from ckeditor_uploader.fields import RichTextUploadingField
+
+
 
 
 # Create your models here.
@@ -23,11 +26,11 @@ STATUS = (
 )
 
 RATING = (
-    ('1', '★☆☆☆☆'),
-    ('2', '★★☆☆☆'),
-    ('3', '★★★☆☆'),
-    ('4', '★★★★☆'),
-    ('5', '★★★★★'),
+    (1, '★☆☆☆☆'),
+    (2, '★★☆☆☆'),
+    (3, '★★★☆☆'),
+    (4, '★★★★☆'),
+    (5, '★★★★★'),
 )
 
 
@@ -45,7 +48,7 @@ class Category(BaseModel):
     cid = ShortUUIDField(unique=True, length=10, max_length=30,
                         prefix='cat', alphabet='abcdef12345')
     image = models.ImageField(upload_to='Category Images', null=True)
-    cat = models.Manager()
+    # cat = models.Manager()
 
     class Meta:
         verbose_name_plural = 'Categories'
@@ -75,9 +78,9 @@ class Product(BaseModel):
     pid = ShortUUIDField(unique=True, length=10, max_length=30,
                         prefix='scat', alphabet='abcdef12345')
     title = models.CharField(max_length=100, default='New Product')
-    specification = models.TextField(
+    specification = RichTextUploadingField(
         null=True, blank=True, default='No description')
-    description = models.TextField(max_length=500, blank=True)
+    description = RichTextUploadingField(max_length=500, blank=True)
 
     qty = models.PositiveIntegerField(default=0)
     warrenty = models.CharField(max_length=100, blank=True)
@@ -96,8 +99,11 @@ class Product(BaseModel):
                         prefix='sku', alphabet='1234567890')
     date = models.DateTimeField(auto_now_add=True) 
 
-    prod = models.Manager()
-
+    # prod = models.Manager()
+    
+    
+    
+    
     class Meta:
         verbose_name_plural = 'Products'
 
@@ -188,7 +194,7 @@ class ProductReview(models.Model):
         verbose_name_plural = 'Products Reviews'
 
     def __str__(self):
-        return self.product.name
+        return self.product.title
 
     def get_rating(self):
         return self.ratings

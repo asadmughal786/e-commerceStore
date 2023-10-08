@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import os
 
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
     # 3rd party apps
+    'ckeditor',
     'phonenumber_field',
     'coreapp',
     'authusers',
@@ -142,6 +145,24 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'authusers.User'
+
+
+CKEDITOR_UPLOAD_PATH = 'uploads/'
+
+# CKEDITOR_CONFIGS = {
+#     'default':{
+#         'skin': 'moono',
+#         'codesnippet_theme':'monokai',
+#         'toobar': 'all',
+#         'extraPlugins':','.join(
+#             [
+#                 'codesnippet',
+#                 'widget',
+#                 'dialog'
+#             ]
+#         ),
+#     }
+# }
 
 
 JAZZMIN_SETTINGS = {
