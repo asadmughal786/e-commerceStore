@@ -129,6 +129,7 @@ class Product(BaseModel):
 class ProductImages(models.Model):
     images = models.ImageField(upload_to='Product-Images')
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
+    color = models.CharField(max_length=10, default='Red')
     date = models.DateTimeField(auto_now_add=True)
 
     class Meta: 

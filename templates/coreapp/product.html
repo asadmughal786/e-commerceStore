@@ -46,31 +46,46 @@
             <h2 class="product-name">{{ products.title }}</h2>
             <div>
               <div class="product-rating">
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star"></i>
-                <i class="fa fa-star-o"></i>
+                
+                {% if average_rating > 0 %}
+                {% for s in average_rating.rating|ljust:average_rating.rating %}
+                              <i class="fa fa-star"></i>
+                              {% endfor %}
+                  {% else %}
+                  <i class="fa fa-star-o"></i>
+                  <i class="fa fa-star-o"></i>
+                  <i class="fa fa-star-o"></i>
+                  <i class="fa fa-star-o"></i>
+                  <i class="fa fa-star-o"></i>
+                {% endif %}
+                  
               </div>
-              <a class="review-link" href="#">10 Review(s) | Add your review</a>
+              <i class="review-link" href="">{{product_review_count}} Review(s)</i>
             </div>
             <div>
               <h3 class="product-price">Rs. {{ products.price }} <del class="product-old-price">Rs. {{ products.old_price }}</del></h3>
               <span class="product-available">{{ products.in_stock|yesno:'in stock,out of stock' }}</span>
             </div>
-            <p>{{ products.specification }}</p>
+            <p>{{ products.description | safe }}</p>
 
             <div class="product-options">
               <label>
-                Color<select class="input-select">
-                  <option value="0">Red</option>
-                </select>
+                Color <select class="input-select">
+                {% if products.productimages_set.all %}
+                  
+                  {% for color in products.productimages_set.all %}
+                    <option value="{{ color.color }}">{{ color.color }}</option>
+                  {% endfor %}
+                    
+                {% endif %}
+              </select>
+                  
               </label>
             </div>
 
             <div class="add-to-cart">
               <div class="qty-label">
-                Qty<div class="input-number">
+                Qty <div class="input-number">
                   <input type="number" />
                   <span class="qty-up">+</span>
                   <span class="qty-down">-</span>
@@ -121,8 +136,8 @@
               </li>
               <li>
                 <a data-toggle="tab" href="#tab3">Reviews (
-                {% if product_review %}
-                  {{product_review.count}}
+                {% if product_review_count > 0 %}
+                  {{product_review_count}}
                   {% else %}
                   0
                 {% endif %}
@@ -160,13 +175,29 @@
                   <div class="col-md-3">
                     <div id="rating">
                       <div class="rating-avg">
+                        
+                        {% if average_rating > 0 %}
                         <span>{{average_rating.rating|floatformat:"1"}}</span>
+                        {% else %}
+                        <span>0</span>
+                          
+                        {% endif %}
+                          
                         <div class="rating-stars">
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star-o"></i>
+                          
+                          {% if average_rating > 0 %}
+                          {% for s in average_rating.rating|ljust:average_rating.rating %}
+                              <i class="fa fa-star"></i>
+                              {% endfor %}
+                              {% else %}
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                              <i class="fa fa-star-o"></i>
+                            
+                          {% endif %}
+                            
                         </div>
                       </div>
                       <ul class="rating">
@@ -279,19 +310,16 @@
                           
                       </ul>
                       <ul class="reviews-pagination">
-                        <li class="active">1</li>
-                        <li>
-                          <a href="#">2</a>
-                        </li>
-                        <li>
-                          <a href="#">3</a>
-                        </li>
-                        <li>
-                          <a href="#">4</a>
-                        </li>
-                        <li>
-                          <a href="#"><i class="fa fa-angle-right"></i></a>
-                        </li>
+                        {% if product_review.has_previous %}
+                        <li><a href="?page=1">Prev</a></li>
+                        {% endif %}
+                        {% if product_review.has_previous %}
+                        <li><a href="?page={{ product_review.previous_page_number }}">{{ product_review.previous_page_number }}</a></li>
+                        {% endif %}
+                        <li class="active">{{ product_review.number }}</li>
+                        {% if product_review.has_next %}
+                        <li><a href="?page={{ product_review.next_page_number }}">{{ product_review.next_page_number }}</a></li>
+                        {% endif %}
                       </ul>
                     </div>
                   </div>
@@ -308,7 +336,6 @@
                      <form class="review-form hide-review-form" action="{% url 'coreapp:ajax-add-review' products.id %}" method= 'POST' id="reviewForm">
                       {% csrf_token %}
                       {{product_review_form.review}}
-                      {% comment %} <textarea class="input" placeholder="Your Review"></textarea> {% endcomment %}
                       <div class="input-rating">
                         <span>Your Rating:</span>
                         <div class="stars">
@@ -354,6 +381,8 @@
           </div>
         </div>
 
+
+
         <!--related product -->
         <div class="col-md-3 col-xs-6">
           {% if related_products %}
@@ -374,11 +403,9 @@
                         {{ product.old_price }}</del>
                     </h4>
                     <div class="product-rating">
+                      
                       <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star"></i>
-                      <i class="fa fa-star-o"></i>
+                        
                     </div>
                     <div class="product-btns">
                       <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>

@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.db.models import Count, Avg
 from .models import *
 from coreapp.forms import ProductReviewForm
+from django.core.paginator import Paginator
 # Create your views here.
 
 
@@ -21,9 +22,20 @@ def product__view(request, pid):
     product = Product.objects.prefetch_related('productimages_set').get(pid=pid)
     product_reviews = ProductReview.objects.filter(product=product).order_by('-date')
     average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('ratings'))
-    # print(f'\n\nProduct---->>> {average_rating}')
+    product_review_count = ProductReview.objects.filter(product=product).count()
+    
+    print(f'\n\nProduct---->>> {product_review_count}')
+    
+    for img in product.productimages_set.all():
+        print(img.color)
     
     product_review_form = ProductReviewForm()
+    
+    
+    # paginator 
+    paginator = Paginator(product_reviews, 5)  # Show 10 reviews per page
+    page = request.GET.get('page')
+    product_review_page = paginator.get_page(page)
     
     make_review = True
     if request.user.is_authenticated:
@@ -42,9 +54,10 @@ def product__view(request, pid):
     
     return render(request, 'coreapp/product.html', context={
                                                             'make_review': make_review,
+                                                            'product_review_count':product_review_count,
                                                             'products': product, 
                                                             'related_product': related_product, 
-                                                            'product_review': product_reviews,
+                                                            'product_review': product_review_page,
                                                             'average_rating': average_rating,
                                                             'product_review_form':product_review_form,
                                                             })
