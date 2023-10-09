@@ -12,11 +12,16 @@ def index(request):
         'product_set').filter(product__product_status='publish')
     return render(request, 'coreapp/index.html', context={'categories': categories_with_products})
 
-def store_listing__view(request):
-    categories_with_products = Category.objects.prefetch_related(
-        'product_set').filter(product__product_status='publish')
+def store_listing__view(request, cid=None):
+    if cid:
+        categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set').order_by('-created_at')
+    else:
+        categories_with_products = Category.objects.prefetch_related('product_set').filter(product__product_status='publish').order_by('-created_at')
     
+    # categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set')
+
     return render(request, 'coreapp/store.html', context={'categories_with_products': categories_with_products})
+
 
 def product__view(request, pid):
     product = Product.objects.prefetch_related('productimages_set').get(pid=pid)
@@ -24,13 +29,9 @@ def product__view(request, pid):
     average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('ratings'))
     product_review_count = ProductReview.objects.filter(product=product).count()
     
-    print(f'\n\nProduct---->>> {product_review_count}')
-    
-    for img in product.productimages_set.all():
-        print(img.color)
+    # print(f'\n\nProduct---->>> {product_review_count}')
     
     product_review_form = ProductReviewForm()
-    
     
     # paginator 
     paginator = Paginator(product_reviews, 5)  # Show 10 reviews per page
@@ -87,10 +88,26 @@ def ajax_add_review(request, pid):
         'average_rating': average_rating,
         }
     )
-    
+
+
+
+
 def search_item(request):
     query = request.GET.get('q')
-    products = Product.objects.filter(title__icontains=query)
+    products_with_apple = Product.objects.filter(title__icontains=query)
     
-    return render(request, 'coreapp/store.html', context={'categories_with_products': categories_with_products})
+    categories_with_products = products_with_apple.select_related('category').prefetch_related('productimages_set', 'productreview_set').order_by('-created_at')
+    product_count = Category.objects.annotate(product_count=Count('product'))
+    paginator = Paginator(categories_with_products, 20)  # Show 20 products per page
+    page = request.GET.get('page')
+    product_review_page = paginator.get_page(page)
+    
+    
+    print(f'Searched items: {categories_with_products}')
+    for product in categories_with_products:
+        print(f'Product: {product}')
+        print(f'ImageUrl: {product.prod_image.url}')
+        print(f'category: {product.category.name}')
+    
+    return render(request, 'coreapp/search_product.html', context={'categories_with_products': product_review_page,'product_count': product_count})
     
