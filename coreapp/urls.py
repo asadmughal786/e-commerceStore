@@ -9,6 +9,7 @@ app_name = 'coreapp'
 
 StoreUrlPatterns=[
     # get product
+    path("",views.store_listing__view, name='store-view'),
     path("<cid>/", views.store_listing__view, name="category-products"),
     
 ]
@@ -20,13 +21,20 @@ ProductUrlPatterns = [
 SearchUrlPatterns = [
     path('',views.search_item,name='search'),
 ]
+
+AddToCartUrlPatterns = [
+    
+    path('',views.added_to_cart, name='add-to-cart')
+]
+
 urlpatterns = [
     path('', views.index, name='index'),
     path('product/', include(ProductUrlPatterns)),
     path("store/", include(StoreUrlPatterns)),
     path('search/',include(SearchUrlPatterns)),
+    path('add-to-cart/',include(AddToCartUrlPatterns)),
     path('ajax-add-review/<int:pid>/',views.ajax_add_review, name='ajax-add-review'),
-    path('user/', include('authusers.urls')),
+    
 ]
 
 

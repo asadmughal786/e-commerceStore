@@ -99,3 +99,45 @@ $("#reviewForm").submit(function (e) {
         }
     });
 });
+
+
+
+// Add to cart funtionality
+
+
+$("#add-to-cart-btn").on("click",function(){
+    let quantity = $("#product-quantity").val()
+    let product_title = $(".products-title").val()
+    let product_id = $(".products-id").val()
+    let product_price = $("#product-price-val").text()  
+    let product_color = $(".product-color").val()
+    let this_val = $(this)
+
+    console.log("Quantity:",quantity);
+    console.log("Title:",product_title);
+    console.log("Product id:",product_id);
+    console.log("Product Price:",product_price);
+    console.log("Product Color:",product_color);
+    console.log("Product Current Elemet:",this_val);
+    
+    $.ajax({
+        url:'/add-to-cart',
+        data: {
+            'id': product_id,
+            'title':product_title,
+            'price': product_price,
+            'qty': quantity,
+            'color': product_color,
+        },
+        dataType:'json',
+        beforeSend: function(){
+            console.log("Adding Product to cart");
+        },
+        success: function(response){
+            this_val.html('item added to cart')
+            console.log("Added Product to cart!");
+            $(".cart-items-count").text(response.totalCartItems)
+        }
+    })
+})
+

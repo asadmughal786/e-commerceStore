@@ -14,19 +14,35 @@ def index(request):
 
 def store_listing__view(request, cid=None):
     if cid:
-        categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set').order_by('-created_at')
+        print('Cid part is running')
+        categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set','product_set__productreview_set').order_by('-created_at')
     else:
-        categories_with_products = Category.objects.prefetch_related('product_set').filter(product__product_status='publish').order_by('-created_at')
-    
+        print('Entered in Else part')
+        categories_with_products = Category.objects.filter(product__product_status='publish').prefetch_related('product_set','product_set__productreview_set').order_by('-created_at')
+        
+    category_with_products_per_page = _extracted_from_store_listing__view_20(
+        categories_with_products, request
+    )   
     # categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set')
 
-    return render(request, 'coreapp/store.html', context={'categories_with_products': categories_with_products})
+    return render(request, 'coreapp/store.html', context={'categories_with_products': category_with_products_per_page})
+
+# Paginator Funtion
+
+# TODO Rename this here and in `store_listing__view`
+def _extracted_from_store_listing__view_20(categories_with_products, request):
+    paginator = Paginator(categories_with_products, 20)  # Show 20 products per page
+    page = request.GET.get('page')
+    return paginator.get_page(page)
 
 
 def product__view(request, pid):
     product = Product.objects.prefetch_related('productimages_set').get(pid=pid)
+    print('Product Data--->>> ', product.id)
     product_reviews = ProductReview.objects.filter(product=product).order_by('-date')
-    average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('ratings'))
+    print('product reviews---->>',product_reviews)
+    average_product_rating = ProductReview.objects.filter(product=product ).aggregate(rating = Avg('ratings'))
+    print("Average Rating From Product View",average_product_rating)
     product_review_count = ProductReview.objects.filter(product=product).count()
     
     # print(f'\n\nProduct---->>> {product_review_count}')
@@ -59,7 +75,7 @@ def product__view(request, pid):
                                                             'products': product, 
                                                             'related_product': related_product, 
                                                             'product_review': product_review_page,
-                                                            'average_rating': average_rating,
+                                                            'average_prod_rating': average_product_rating,
                                                             'product_review_form':product_review_form,
                                                             })
 
@@ -74,6 +90,7 @@ def ajax_add_review(request, pid):
         ratings = request.POST['ratings'],
     )
     average_rating = ProductReview.objects.filter(product=product).aggregate(rating = Avg('ratings'))
+    # print('Average rating from Ajax',average_rating)
     context = {
             'user': user.username,
             'review': request.POST['review'],
@@ -90,24 +107,44 @@ def ajax_add_review(request, pid):
     )
 
 
-
-
 def search_item(request):
     query = request.GET.get('q')
     products_with_apple = Product.objects.filter(title__icontains=query)
-    
     categories_with_products = products_with_apple.select_related('category').prefetch_related('productimages_set', 'productreview_set').order_by('-created_at')
     product_count = Category.objects.annotate(product_count=Count('product'))
+    
+    #paginator
     paginator = Paginator(categories_with_products, 20)  # Show 20 products per page
     page = request.GET.get('page')
     product_review_page = paginator.get_page(page)
     
     
-    print(f'Searched items: {categories_with_products}')
-    for product in categories_with_products:
-        print(f'Product: {product}')
-        print(f'ImageUrl: {product.prod_image.url}')
-        print(f'category: {product.category.name}')
-    
     return render(request, 'coreapp/search_product.html', context={'categories_with_products': product_review_page,'product_count': product_count})
+
+# Add to cart ajax
+
+def added_to_cart(request):
+    cart_products = {
+        str(request.GET["id"]): {
+            'title': request.GET["title"],
+            'qty': request.GET['qty'],
+            'price': request.GET['price'],
+            'color': request.GET['color']
+        }
+    }
     
+    if 'cart_data_obj' in request.session:
+        cart_data = request.session['cart_data_obj']
+        if str(request.GET['id']) in cart_data:
+            cart_data[str(request.GET['id'])]['qty'] = int(request.GET['qty'])
+        else:
+            cart_data.update(cart_products)
+        request.session['cart_data_obj'] = cart_data
+    else:
+        # Initialize cart_data_obj as an empty dictionary
+        request.session['cart_data_obj'] = cart_products
+
+    return JsonResponse({
+        "data": request.session["cart_data_obj"],
+        'totalCartItems': len(request.session['cart_data_obj'])
+    })

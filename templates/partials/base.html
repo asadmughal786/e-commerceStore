@@ -56,10 +56,10 @@
 					<li><a href="#"><i class="fa fa-money"></i> PKR</a></li>
 					{% if user.is_authenticated %}
 					<li><a href="#"><i class="fa fa-user-o"></i> {{user.username}}</a></li>
-					<li><a href="{% url 'logout'%}"><i class="fa fa-sign-out"></i>logout</a></li>
+					<li><a href="{% url 'authusers:logout'%}"><i class="fa fa-sign-out"></i>logout</a></li>
 					{% else %}
-					<li><a href="{% url 'sign-in'%}"><i class="fa fa-user-o"></i>login</a></li>
-					<li><a href="{% url 'sign-up'%}"><i class="fa fa-user-plus"></i>Sign Up</a></li>
+					<li><a href="{% url 'authusers:sign-in'%}"><i class="fa fa-user-o"></i>login</a></li>
+					<li><a href="{% url 'authusers:sign-up'%}"><i class="fa fa-user-plus"></i>Sign Up</a></li>
 					{% endif %}
 					
 				</ul>
@@ -127,13 +127,13 @@
 								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Your Cart</span>
-									<div class="qty">3</div>
+									<div class="qty cart-items-count">{{ request.session.cart_data_obj| length}}</div>
 								</a>
 								<div class="cart-dropdown">
 									<div class="cart-list">
 										<div class="product-widget">
 											<div class="product-img">
-												<img src="{% static './img/product01.png' %}" alt="">
+												<img src="./img/product01.png" alt="">
 											</div>
 											<div class="product-body">
 												<h3 class="product-name"><a href="#">product name goes here</a></h3>
@@ -144,7 +144,7 @@
 
 										<div class="product-widget">
 											<div class="product-img">
-												<img src="{% static './img/product02.png' %}" alt="">
+												<img src="./img/product02.png" alt="">
 											</div>
 											<div class="product-body">
 												<h3 class="product-name"><a href="#">product name goes here</a></h3>
@@ -193,14 +193,13 @@
 			<div id="responsive-nav">
 				<!-- NAV -->
 				<ul class="main-nav nav navbar-nav">
-					<li class="active"><a href="#">Home</a></li>
-					
+					<li class="active"><a href="{% url 'coreapp:index' %}">Home</a></li>
 					{% if categories %}
 					{% for category in categories %}
-					<li><a href="#">{{category.name}}</a></li>
+					<li><a href="{% url 'coreapp:category-products' category.cid %}">{{category.name}}</a></li>
 					{% endfor %} 
 						{% else %}
-						<p><i>Categories not found</i></p>
+					<li><a>Categories not found</a></li>
 					{% endif %}
 						
 						
@@ -213,6 +212,26 @@
 		<!-- /container -->
 	</nav>
 	<!-- /NAVIGATION -->
+
+	<!-- BREADCRUMB -->
+	<div id="breadcrumb" class="section">
+		<!-- container -->
+		<div class="container">
+			<!-- row -->
+			<div class="row">
+				<div class="col-md-12">
+					<h3 class="breadcrumb-header">Regular Page</h3>
+					<ul class="breadcrumb-tree">
+						<li><a href="#">Home</a></li>
+						<li class="active">Blank</li>
+					</ul>
+				</div>
+			</div>
+			<!-- /row -->
+		</div>
+		<!-- /container -->
+	</div>
+	<!-- /BREADCRUMB -->
 
 	{% if messages %}
 	{% for message in messages %}

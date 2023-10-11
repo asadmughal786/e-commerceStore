@@ -170,16 +170,17 @@
                             {{ product.old_price }}</del>
                         </h4>
                         <div class="product-rating">
+                          {% comment %} <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
                           <i class="fa fa-star"></i>
-                          <i class="fa fa-star"></i>
-                          <i class="fa fa-star-o"></i>
+                          <i class="fa fa-star-o"></i> {% endcomment %}
                         </div>
                         <div class="product-btns">
+                         
                           <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-                          <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button>
-                          <button class="quick-view"><i class="fa fa-eye"><a href="#"></a></i><span class="tooltipp">quick view</span></button>
+                          {% comment %} <button class="add-to-compare"><i class="fa fa-exchange"></i><span class="tooltipp">add to compare</span></button> {% endcomment %}
+                          <button class="quick-view"><a href="{% url 'coreapp:product-detials' product.pid %}"><i class="fa fa-eye"></i></a><span class="tooltipp">quick view</span></button>
                         </div>
                       </div>
                       <div class="add-to-cart">
@@ -196,22 +197,27 @@
 
           <!-- store bottom filter -->
           <div class="store-filter clearfix">
-            <span class="store-qty">Showing 20-100 products</span>
-            <ul class="store-pagination">
-              <li class="active">1</li>
+            <span class="store-qty">
+              Showing {{ categories_with_products.start_index }}-{{ categories_with_products.end_index }} of {{ categories_with_products.paginator.count }} products
+          </span>
+          <ul class="store-pagination">
+              {% if categories_with_products.has_previous %}
               <li>
-                <a href="#">2</a>
+                  <a href="?page=1"><i class="fa fa-angle-left"></i></a>
               </li>
+              {% endif %}
+              
+              {% for page_num in categories_with_products.paginator.page_range %}
+              <li {% if categories_with_products.number == page_num %}class="active"{% endif %}>
+                  <a href="?page={{ page_num }}">{{ page_num }}</a>
+              </li>
+              {% endfor %}
+              
+              {% if categories_with_products.has_next %}
               <li>
-                <a href="#">3</a>
+                  <a href="?page={{ categories_with_products.paginator.num_pages }}"><i class="fa fa-angle-right"></i></a>
               </li>
-              <li>
-                <a href="#">4</a>
-              </li>
-              <li>
-                <a href="#"><i class="fa fa-angle-right"></i></a>
-              </li>
-            </ul>
+              {% endif %}
           </div>
           <!-- /store bottom filter -->
         </div>
