@@ -35,6 +35,7 @@ def index(request):
 
 
 def store_listing__view(request, cid=None):
+    categories = Category.objects.all()
     if cid:
         print('Cid part is running')
         categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set','product_set__productreview_set').order_by('-created_at')
@@ -48,7 +49,9 @@ def store_listing__view(request, cid=None):
     
     # categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set')
 
-    return render(request, 'coreapp/store.html', context={'categories_with_products': category_with_products_per_page})
+    return render(request, 'coreapp/product-listing.html', context={
+        'all_categories': categories,
+        'categories_with_products': category_with_products_per_page})
 
 # Paginator Funtion
 
