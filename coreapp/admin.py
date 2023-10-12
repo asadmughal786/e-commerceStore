@@ -24,10 +24,13 @@ class CategoryAdmin(admin.ModelAdmin):
 class ProductImagesAdmin(admin.TabularInline):
     model = ProductImages
 
+class ProductColorAdmin(admin.TabularInline):
+    model = ProductColor
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     
-    inlines = [ProductImagesAdmin]
+    inlines = [ProductImagesAdmin, ProductColorAdmin]
     list_display = ['title', 'avatar_tag',
                     'in_stock', 'qty', 'warrenty', 'price', 'category', 'product_status']
     fieldsets =(

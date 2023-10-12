@@ -8,9 +8,31 @@ from django.core.paginator import Paginator
 
 
 def index(request):
-    categories_with_products = Category.objects.prefetch_related(
-        'product_set').filter(product__product_status='publish')
-    return render(request, 'coreapp/index.html', context={'categories': categories_with_products})
+    categories = Category.objects.all()
+    published_products = Product.objects.filter(product_status='publish').select_related('category')
+    published_products = published_products.prefetch_related('productimages_set', 'productcolor_set')
+    # Annotate the average rating for each product
+    published_products = published_products.annotate(average_rating=Avg('productreview__ratings'))
+    # Annotate the count of images for each product
+    published_products = published_products.annotate(image_count=Count('productimages'))
+    
+    for product in published_products:
+        print("ID:", product.id)
+        print("Pid:", product.pid)
+        print("Title:", product.title)
+        print("Category:", product.category.name)
+        print("Average Rating:", product.average_rating)
+        print("Image Count:", product.image_count)
+        print("Colors:")
+        for color in product.productcolor_set.all():
+            print(color.color)
+            
+            
+    return render(request, 'coreapp/main-index.html', context={
+        'categories': categories,
+        'categories_products': published_products})
+
+
 
 def store_listing__view(request, cid=None):
     if cid:
@@ -23,6 +45,7 @@ def store_listing__view(request, cid=None):
     category_with_products_per_page = _extracted_from_store_listing__view_20(
         categories_with_products, request
     )   
+    
     # categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set')
 
     return render(request, 'coreapp/store.html', context={'categories_with_products': category_with_products_per_page})
@@ -37,8 +60,11 @@ def _extracted_from_store_listing__view_20(categories_with_products, request):
 
 
 def product__view(request, pid):
-    product = Product.objects.prefetch_related('productimages_set').get(pid=pid)
+    product = Product.objects.prefetch_related('productimages_set','productcolor_set').get(pid=pid)
     print('Product Data--->>> ', product.id)
+    for product_color in product.productcolor_set.all():
+        print("Color:", product_color.color)
+        
     product_reviews = ProductReview.objects.filter(product=product).order_by('-date')
     print('product reviews---->>',product_reviews)
     average_product_rating = ProductReview.objects.filter(product=product ).aggregate(rating = Avg('ratings'))
@@ -129,7 +155,9 @@ def added_to_cart(request):
             'title': request.GET["title"],
             'qty': request.GET['qty'],
             'price': request.GET['price'],
-            'color': request.GET['color']
+            # 'color': request.GET['color'],
+            'image': request.GET['image'],
+            'pid': request.GET['pid'],
         }
     }
     

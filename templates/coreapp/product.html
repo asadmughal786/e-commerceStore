@@ -71,9 +71,9 @@
             <div class="product-options">
               <label>
                 Color <select class="input-select">
-                {% if products.productimages_set.all %}
+                {% if products.productcolor_set.all %}
                   
-                  {% for color in products.productimages_set.all %}
+                  {% for color in products.productcolor_set.all %}
                     <option value="{{ color.color }}" class="product-color">{{ color.color }}</option>
                   {% endfor %}
                     
@@ -93,6 +93,7 @@
               </div>
               <input type="hidden" value="{{products.id}}" class="products-id" name="" id="">
               <input type="hidden" value="{{products.title}}" class="products-title" name="" id="">
+              <input type="hidden" value="{{products.prod_image.url}}" class="products-image" name="" id="">
               <button class="add-to-cart-btn" id="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
             </div>
 
@@ -422,7 +423,7 @@
                   </div>
                   <div class="add-to-cart">
                     
-                    <button type="submit" class="add-to-cart-btn" id="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+                    <button type="submit" class="add-to-cart-btn" ><i class="fa fa-shopping-cart"></i> add to cart</button>
                   </div>
                 </div>
               </div>
