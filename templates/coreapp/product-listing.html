@@ -198,12 +198,12 @@
                       <p class="product-category">{{ product.category.name }}</p>
                       <h3 class="product-name"><a href="{% url 'coreapp:product-detials' product.pid %}">{{ product.title }}</a></h3>
 					  {% if product.productcolor_set.all %}
-                                        <p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
-                                            {% endif %}
-                      <h4 class="product-price">
-                        Rs. {{ product.price }} <del class="product-old-price">Rs.
-                          {{ product.old_price }}</del>
-                      </h4>
+                    	<p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
+                    {% endif %}
+		
+					<h4 class="product-price">Rs. <h3 class="product-price"
+						id="product-price-val-{{product.id}}"> {{ product.price }} </h3> <del
+						class="product-old-price">{{ product.old_price }}</del></h4>
 
                       <div class="product-rating">
                         {% if product.average_review > 0 %}
@@ -225,7 +225,20 @@
                       </div>
                     </div>
                     <div class="add-to-cart">
-                      <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+						<input type="hidden" class="Product-pid-{{ product.id }}"
+                                            value="{{ product.pid }}">
+                        <input type="hidden" class="Product-color-{{ product.id }}"
+                                            value="{{ product.productcolor_set.all.0.color }}">
+                        <input type="hidden" class="product-quantity-{{ product.id }}" value="1">
+                        <input type="hidden" class="Product-image-{{ product.id }}"
+                                            value="{{ product.prod_image.url }}">
+                        <input type="hidden" class="Product-id-{{ product.id }}"
+                                            value="{{ product.id }}">
+                        <input type="hidden" class="Product-title-{{ product.id }}"
+                                            value="{{ product.title }}">
+                        <button class="add-to-cart-btn" data-index="{{ product.id }}"><i
+                                                class="fa fa-shopping-cart"></i> add to cart</button>
+                      
                     </div>
                   </div>
                 </div>
