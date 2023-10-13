@@ -38,16 +38,42 @@ def store_listing__view(request, cid=None):
     categories = Category.objects.all()
     if cid:
         print('Cid part is running')
-        categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set','product_set__productreview_set').order_by('-created_at')
+        categories_with_products = Product.objects.filter(category__cid=cid, product_status='publish').prefetch_related("productcolor_set").annotate(average_review=Avg('productreview__ratings')).order_by('-created_at')
+
     else:
         print('Entered in Else part')
-        categories_with_products = Category.objects.filter(product__product_status='publish').prefetch_related('product_set','product_set__productreview_set').order_by('-created_at')
-        
+        categories_with_products = Product.objects.filter(product__product_status='publish').prefetch_related('product_set').annotate(average_rating=Avg('productreview__ratings')).order_by('-created_at')
+    
+    for product in categories_with_products:
+        print(f"Product Name: {product.title}")
+        print(f"Category Name: {product.category.name}")
+
+        # Check if there are reviews and calculate the average
+        if product.average_review is not None:
+            print(f"Average Review: {product.average_review:.2f}")
+        else:
+            print("No reviews available")
+
+        # Check for product colors
+        colors = product.productcolor_set.all()
+        if colors:
+            print("Available Colors:")
+            for color in colors:
+                print(f"- {color.color}")
+        else:
+            print("No colors available")
+
+        # Include other product details as needed
+        print(f"Price: {product.price}")
+    
+    
+    
+    
+    # Paginator
     category_with_products_per_page = _extracted_from_store_listing__view_20(
         categories_with_products, request
     )   
     
-    # categories_with_products = Category.objects.filter(cid=cid, product__product_status='publish').prefetch_related('product_set')
 
     return render(request, 'coreapp/product-listing.html', context={
         'all_categories': categories,
