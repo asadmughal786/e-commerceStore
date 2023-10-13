@@ -24,7 +24,8 @@ SearchUrlPatterns = [
 
 AddToCartUrlPatterns = [
     
-    path('',views.added_to_cart, name='add-to-cart')
+    path('',views.added_to_cart, name='add-to-cart'),
+    
 ]
 
 urlpatterns = [
@@ -33,6 +34,7 @@ urlpatterns = [
     path("store/", include(StoreUrlPatterns)),
     path('search/',include(SearchUrlPatterns)),
     path('add-to-cart/',include(AddToCartUrlPatterns)),
+    path('cart/', views.cart_view, name='cart'),
     path('ajax-add-review/<int:pid>/',views.ajax_add_review, name='ajax-add-review'),
     
 ]

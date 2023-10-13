@@ -1,5 +1,6 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.contrib import messages
+from django.shortcuts import render, redirect
 from django.db.models import Count, Avg
 from .models import *
 from coreapp.forms import ProductReviewForm
@@ -184,7 +185,7 @@ def added_to_cart(request):
             'title': request.GET["title"],
             'qty': request.GET['qty'],
             'price': request.GET['price'],
-            # 'color': request.GET['color'],
+            'color': request.GET['color'],
             'image': request.GET['image'],
             'pid': request.GET['pid'],
         }
@@ -205,3 +206,21 @@ def added_to_cart(request):
         "data": request.session["cart_data_obj"],
         'totalCartItems': len(request.session['cart_data_obj'])
     })
+
+# Cart View
+
+def cart_view(request):
+    cart_total_amount = 0
+    
+    if 'cart_data_obj' in request.session:
+        for product_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['qty']) * float(item['price'])
+            return render(request, "coreapp/checkout.html",{
+                "cart_data": request.session["cart_data_obj"],
+                'totalCartItems': len(request.session['cart_data_obj']),
+                "TotalAmount": cart_total_amount
+                                                            
+                })
+        else:
+            messages.warning(request,"You cart is empty")
+            return redirect("coreapp:index")
