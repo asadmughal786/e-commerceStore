@@ -253,23 +253,28 @@
 
           <!-- store bottom filter -->
           <div class="store-filter clearfix">
-            <span class="store-qty">Showing 20-100 products</span>
-            <ul class="store-pagination">
-              <li class="active">1</li>
-              <li>
-                <a href="#">2</a>
-              </li>
-              <li>
-                <a href="#">3</a>
-              </li>
-              <li>
-                <a href="#">4</a>
-              </li>
-              <li>
-                <a href="#"><i class="fa fa-angle-right"></i></a>
-              </li>
-            </ul>
-          </div>
+			<span class="store-qty">
+			  Showing {{ categories_with_products.start_index }}-{{ categories_with_products.end_index }} of {{categories_with_products.paginator.count }} products
+			</span>
+			<ul class="store-pagination">
+			  {% if categories_with_products.has_previous %}
+			  <li>
+				<a href="?page=1"><i class="fa fa-angle-left"></i></a>
+			  </li>
+			  {% endif %}
+  
+			  {% for page_num in categories_with_products.paginator.page_range %}
+				<li {% if categories_with_products.number == page_num %}class="active" {% endif %}>
+					<a href="?page={{ page_num }}">{{ page_num }}</a>
+				</li>
+				{% endfor %}
+  
+			  {% if categories_with_products.has_next %}
+			  <li>
+				<a href="?page={{ categories_with_products.paginator.num_pages }}"><i class="fa fa-angle-right"></i></a>
+			  </li>
+			  {% endif %}
+		  </div>
           <!-- /store bottom filter -->
         </div>
         <!-- /STORE -->

@@ -165,28 +165,26 @@ $(".add-to-cart-btn").on("click", function () {
     console.log("Product Image URL:", product_image);
     console.log("Product Color:", product_color);
     console.log("Product Current Element:", this);
-        
-        // Rest of your code (e.g., the AJAX request) can be placed here.
 
-    // $.ajax({
-    //     url:'/add-to-cart',
-    //     data: {
-    //         'id': product_id,
-    //         'pid': product_pid,
-    //         'title':product_title,
-    //         'image': product_image,
-    //         'price': product_price,
-    //         'qty': quantity,
-    //         // 'color': product_color,
-    //     },
-    //     dataType:'json',
-    //     beforeSend: function(){
-    //         console.log("Adding Product to cart");
-    //     },
-    //     success: function(response){
-    //         this_val.html('item added to cart')
-    //         console.log("Added Product to cart!");
-    //         $(".cart-items-count").text(response.totalCartItems)
-    //     }
-    // })
+    $.ajax({
+        url:'/add-to-cart',
+        data: {
+            'id': product_id,
+            'pid': product_pid,
+            'title':product_title,
+            'image': product_image,
+            'price': product_price,
+            'qty': quantity,
+            // 'color': product_color,
+        },
+        dataType:'json',
+        beforeSend: function(){
+            console.log("Adding Product to cart");
+        },
+        success: function(response){
+            this_val.html('item added to cart')
+            console.log("Added Product to cart!");
+            $(".cart-items-count").text(response.totalCartItems)
+        }
+    })
     });
