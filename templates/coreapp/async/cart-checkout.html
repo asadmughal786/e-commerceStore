@@ -1,6 +1,3 @@
-{% extends 'partials/base.html' %}
-{% load static %} 
-{% block cart %}
 
 
 		<!-- SECTION -->
@@ -190,9 +187,12 @@
 								I've read and accept the <a href="#">terms & conditions</a>
 							</label>
 						</div>
+						
 						{% if totalCartItems %}
 						<a href="#" class="primary-btn order-submit">Place order</a>
 						{% endif %}
+							
+						
 					</div>
 					<!-- /Order Details -->
 				</div>
@@ -201,7 +201,3 @@
 			<!-- /container -->
 		</div>
 		<!-- /SECTION -->
-
-	
-{% endblock cart %}
-	

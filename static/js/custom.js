@@ -45,6 +45,27 @@ $("#reviewForm").submit(function (e) {
 });
 
 
+// Filter the product
+
+$(document).ready(function(){
+    $(".filter-checkbox").on("click",function(){
+        console.log("A checkbox have been clicked")
+
+        let filter_object = {}
+
+        $(".filter-checkbox").each(function(){
+            let filter_value = $(this).val()
+            let filter_key = $(this).data("filter")
+
+            console.log("filter value is:", filter_value);
+            console.log("filter key is:", filter_key);
+        })
+    })
+
+    
+})
+
+
 
 // // Old Add to cart funtionality
 
@@ -132,3 +153,32 @@ $(".add-to-cart-btn").on("click", function () {
         }
     })
     });
+
+$(".delete-product").on("click", function () {
+
+    let product_id = $(this).attr("data-product")
+    let this_val = $(this)
+
+    console.log("Product ID: ", product_id);
+
+    $.ajax(
+        {
+            url: "/delete-from-cart",
+            data: {
+                "id": product_id
+            },
+            dataType: "json",
+            beforeSend: function(){
+                this_val.hide()
+            },
+            success: function(response){
+                this_val.show()
+                $(".cart-items-count").text(response.totalCartItems)
+                $("#cart-check-refresh").html(response.data)
+            }
+            
+        
+        
+        
+        })
+});

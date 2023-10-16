@@ -2,6 +2,29 @@
 {% load static %}
 
 {% block product_page %}
+
+
+<!-- BREADCRUMB -->
+<div id="breadcrumb" class="section">
+  <!-- container -->
+  <div class="container">
+    <!-- row -->
+    <div class="row">
+      <div class="col-md-12">
+        <h3 class="breadcrumb-header">Shop</h3>
+        <ul class="breadcrumb-tree">
+          <li><a href="{% url 'coreapp:index' %}">Home</a></li>
+          <li><a href="{% url 'coreapp:index' %}">Shop</a></li>
+        </ul>
+      </div>
+    </div>
+    <!-- /row -->
+  </div>
+  <!-- /container -->
+</div>
+<!-- /BREADCRUMB -->
+
+
   <div class="section">
     <!-- container -->
     <div class="container">
@@ -16,7 +39,7 @@
               {% if all_categories %}
                 {% for category in all_categories %}
                   <div class="input-checkbox">
-                    <input type="checkbox" id="category-2" />
+                    <input class="filter-checkbox" data-filter="{{category.cid}}" type="checkbox" id="category-2" />
                     <label for="category-2">
                       <span></span>
                       {{ category.name }}
@@ -197,13 +220,13 @@
                     <div class="product-body">
                       <p class="product-category">{{ product.category.name }}</p>
                       <h3 class="product-name"><a href="{% url 'coreapp:product-detials' product.pid %}">{{ product.title }}</a></h3>
-					  {% if product.productcolor_set.all %}
-                    	<p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
-                    {% endif %}
+                        {% if product.productcolor_set.all %}
+                          <p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
+                        {% endif %}
 		
-					<h4 class="product-price">Rs. <h3 class="product-price"
-						id="product-price-val-{{product.id}}"> {{ product.price }} </h3> <del
-						class="product-old-price">{{ product.old_price }}</del></h4>
+                          <h4 class="product-price">Rs. <h3 class="product-price"
+                          id="product-price-val-{{product.id}}"> {{ product.price }} </h3> <del
+                          class="product-old-price">{{ product.old_price }}</del></h4>
 
                       <div class="product-rating">
                         {% if product.average_review > 0 %}
