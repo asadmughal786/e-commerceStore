@@ -71,8 +71,8 @@
                                                 id="product-price-val-{{product.id}}"> {{ product.price }} </h3> <del
                                                 class="product-old-price">{{ product.old_price }}</del></h4>
                                         <div class="product-rating">
-                                            {% if average_prod_rating.rating > 0 %}
-                                            {% for s in average_prod_rating.rating|ljust:average_prod_rating.rating %}
+                                            {% if product.average_rating > 0 %}
+                                            {% for s in product.average_rating|ljust:product.average_rating %}
                                             <i class="fa fa-star"></i>
                                             {% endfor %}
                                             {% else %}

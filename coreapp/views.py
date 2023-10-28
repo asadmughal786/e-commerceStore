@@ -166,9 +166,9 @@ def ajax_add_review(request, pid):
 
 def search_item(request):
     query = request.GET.get('q')
-    products_with_apple = Product.objects.filter(title__icontains=query)
-    categories_with_products = products_with_apple.select_related('category').prefetch_related('productimages_set', 'productreview_set').order_by('-created_at')
+    categories_with_products = Product.objects.filter(title__icontains=query, product_status='publish').prefetch_related("productcolor_set").annotate(average_review=Avg('productreview__ratings')).order_by('-created_at')
     product_count = Category.objects.annotate(product_count=Count('product'))
+    
     
     #paginator
     paginator = Paginator(categories_with_products, 20)  # Show 20 products per page
@@ -177,6 +177,8 @@ def search_item(request):
     
     
     return render(request, 'coreapp/search_product.html', context={'categories_with_products': product_review_page,'product_count': product_count})
+
+
 
 # Add to cart ajax
 
@@ -214,6 +216,7 @@ def added_to_cart(request):
     })
 
 
+
 # Cart View
 
 def cart_view(request):
@@ -221,17 +224,22 @@ def cart_view(request):
     if 'cart_data_obj' in request.session and (len(request.session['cart_data_obj']) > 0):
         print("Entered in View Cart")
         cart_total_amount = 0
+        total_amount = 0
+        # cart total amount
         for product_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
             print('\nTotal Cart Amount--->>', cart_total_amount)
+        
         return render(request, "coreapp/checkout.html",{"cart_data": request.session["cart_data_obj"],'totalCartItems': len(request.session['cart_data_obj']),
                 "TotalAmount": cart_total_amount
                 })
+
     else:
         print("else part is working")
         messages.warning(request,"You cart is empty")
         return redirect("coreapp:index")
     
+
 def delete_item_from_cart(request):
     product_id = str(request.GET['id'])
     if 'cart_data_obj' in request.session:
@@ -250,4 +258,17 @@ def delete_item_from_cart(request):
         "data": context,
         'totalCartItems': len(request.session['cart_data_obj'])
     })
-    
+
+def place_order (request):
+    if 'cart_data_obj' in request.session and (len(request.session['cart_data_obj']) > 0):
+        print("Entered in View Cart")
+        cart_total_amount = 0
+        total_amount = 0
+        # cart total amount
+        for product_id, item in request.session['cart_data_obj'].items():
+            cart_total_amount += int(item['qty']) * float(item['price'])
+            print('\nTotal Cart Amount--->>', cart_total_amount)
+    return render(request,'coreapp/payment_checkout.html',{"cart_data": request.session["cart_data_obj"],'totalCartItems': len(request.session['cart_data_obj']),
+                "TotalAmount": cart_total_amount
+                })
+

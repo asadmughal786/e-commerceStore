@@ -100,10 +100,7 @@ class Product(BaseModel):
     date = models.DateTimeField(auto_now_add=True) 
 
     # prod = models.Manager()
-    
-    
-    
-    
+
     class Meta:
         verbose_name_plural = 'Products'
 
@@ -172,7 +169,6 @@ class CartOrders(models.Model):
 
 class CartOrderItems(models.Model):
     order = models.ForeignKey(CartOrders, on_delete=models.CASCADE)
-    invoice_no = models.CharField(max_length=200)
     invoice_no = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)

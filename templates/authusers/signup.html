@@ -15,6 +15,22 @@
     <div style="color: red; text-align: left;">
       <small class="text-error">{{ form.username.errors|striptags }}</small>
     </div>
+    <!--First Name -->
+    <div class="form-outline mb-4">
+      <input type="text" id="form3Example1" class="form-control" name="{{ form.first_name.name }}" />
+      <label class="form-label" for="form3Example1">{{ form.first_name.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+      <small class="text-error">{{ form.first_name.errors|striptags }}</small>
+    </div>
+    <!-- last Name -->
+    <div class="form-outline mb-4">
+      <input type="text" id="form3Example1" class="form-control" name="{{ form.last_name.name }}" />
+      <label class="form-label" for="form3Example1">{{ form.last_name.label }}</label>
+    </div>
+    <div style="color: red; text-align: left;">
+      <small class="text-error">{{ form.last_name.errors|striptags }}</small>
+    </div>
 
     <!-- Email input -->
     <div class="form-outline mb-4">

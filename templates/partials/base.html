@@ -29,6 +29,7 @@
 
 	<!-- Custom stlylesheet -->
 	<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" />
+	<link rel="stylesheet" href="{% static 'css/profile.css' %}">
     {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" /> {% endcomment %}
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -55,7 +56,7 @@
 				<ul class="header-links pull-right">
 					<li><a href="#"><i class="fa fa-money"></i> PKR</a></li>
 					{% if user.is_authenticated %}
-					<li><a href="#"><i class="fa fa-user-o"></i> {{user.username}}</a></li>
+					<li><a href="{% url 'authusers:user-profile' %}"><i class="fa fa-user-o"></i> {{user.username}}</a></li>
 					<li><a href="{% url 'authusers:logout'%}"><i class="fa fa-sign-out"></i>logout</a></li>
 					{% else %}
 					<li><a href="{% url 'authusers:sign-in'%}"><i class="fa fa-user-o"></i>login</a></li>
@@ -230,6 +231,12 @@
 	{% block SearchProduct %}{% endblock SearchProduct %}
 	
 	{% block cart %}{% endblock cart %}
+	
+	{% block checkout %}{% endblock checkout %}
+
+	
+	{% block profile %}{% endblock profile %}
+		
 		
 		
 
