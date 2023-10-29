@@ -20,16 +20,17 @@
 	<!-- Slick -->
 	<link type="text/css" rel="stylesheet" href="{% static 'css/slick.css' %}" />
 	<link type="text/css" rel="stylesheet" href="{% static 'css/slick-theme.css' %}" />
-
+	
 	<!-- nouislider -->
 	<link type="text/css" rel="stylesheet" href="{% static 'css/nouislider.min.css' %}" />
-
+	
 	<!-- Font Awesome Icon -->
 	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"/>
-
+	
 	<!-- Custom stlylesheet -->
 	<link type="text/css" rel="stylesheet" href="{% static 'css/style.css' %}" />
 	<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+	<link rel="stylesheet" type="text/css" media="all" href="{% static 'css/invoice.css' %}">
     {% comment %} <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" /> {% endcomment %}
 	<!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
 	<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -234,12 +235,14 @@
 	
 	{% block checkout %}{% endblock checkout %}
 
-	
 	{% block profile %}{% endblock profile %}
 	
 	{% block changepassword %}
 		
 	{% endblock changepassword %}
+	
+	{% block invoice %}{% endblock invoice %}
+		
 		
 		
 		

@@ -6,6 +6,7 @@ from django.db.models import Count, Avg
 from .models import *
 from coreapp.forms import ProductReviewForm
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 # Create your views here.
 
 
@@ -259,16 +260,41 @@ def delete_item_from_cart(request):
         'totalCartItems': len(request.session['cart_data_obj'])
     })
 
-def place_order (request):
-    if 'cart_data_obj' in request.session and (len(request.session['cart_data_obj']) > 0):
+@login_required
+def checkout_view (request):
+    
+    
+    if 'cart_data_obj' in request.session:
         print("Entered in View Cart")
         cart_total_amount = 0
         total_amount = 0
         # cart total amount
         for product_id, item in request.session['cart_data_obj'].items():
+            total_amount += int(item['qty']) * float(item['price'])
+            print('\nTotal Cart Amount--->>', total_amount)
+        
+        # Cart Order Object Creating 
+        order = CartOrders.objects.create(
+            user = request.user,
+            price = total_amount,
+        )
+        for product_id, item in request.session['cart_data_obj'].items():
             cart_total_amount += int(item['qty']) * float(item['price'])
             print('\nTotal Cart Amount--->>', cart_total_amount)
+            cart_order_products = CartOrderItems.objects.create(
+                order = order,
+                invoice_no = "INVOICE-NO-"+ str(order.id),
+                item = item['title'],
+                image = item['image'],
+                qty = item['qty'],
+                price = item['price'],
+                total_amount = float(item['qty']) * float(item['price'])
+            )
+        
     return render(request,'coreapp/payment_checkout.html',{"cart_data": request.session["cart_data_obj"],'totalCartItems': len(request.session['cart_data_obj']),
                 "TotalAmount": cart_total_amount
                 })
+    
+def invoice_view(request):
+    return render(request,'coreapp/invoice.html')
 

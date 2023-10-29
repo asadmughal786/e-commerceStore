@@ -38,12 +38,12 @@ urlpatterns = [
     path('add-to-cart/',include(AddToCartUrlPatterns)),
     path('cart/', views.cart_view, name='cart'),
     path('delete-from-cart/', views.delete_item_from_cart, name="delete-from-cart"),
-    path('checkout/',views.place_order, name='place-order'),
+    path('checkout/',views.checkout_view, name='checkout'),
+    path('invoice/',views.invoice_view, name='invoice'),
     path('ajax-add-review/<int:pid>/',views.ajax_add_review, name='ajax-add-review'),
     
     
 ]
 
 if settings.DEBUG:
-    urlpatterns += static(settings.MEDIA_URL,
-                          document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

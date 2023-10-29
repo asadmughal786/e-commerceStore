@@ -48,15 +48,25 @@ class ProductAdmin(admin.ModelAdmin):
     avatar_tag.allow_tags = True
     
 @admin.register(CartOrders)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ['user', 'price', 'payment_status',
+class CartOrderAdmin(admin.ModelAdmin):
+    list_editable = ['payment_status','product_status']
+    list_display = ['id','user', 'price', 'payment_status',
                     'order_date', 'product_status']
 
 
 @admin.register(CartOrderItems)
 class CartOrderItemsAdmin(admin.ModelAdmin):
-    list_display = ['order', 'invoice_no', 'item',
-                    'image', 'qty', 'price', 'total_amount']
+    list_display = ['id','order', 'invoice_no', 'item',
+                    'avatar_tag', 'qty', 'price', 'total_amount']
+    def avatar_tag(self, obj):
+        if isinstance(obj.image, str):
+            return format_html(f'<img src="{obj.image}" align="middle" width="60px" height="60px"/>')
+        elif obj.image:
+            return format_html(f'<img src="{obj.image.url}" align="middle" width="60px" height="60px"/>')
+        else:
+            return 'No image'
+    avatar_tag.short_description = 'Avatar'
+    avatar_tag.allow_tags = True
 
 
 @admin.register(ProductReview)
