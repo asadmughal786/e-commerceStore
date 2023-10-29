@@ -1,6 +1,7 @@
 from django.shortcuts import render,redirect,HttpResponseRedirect
 from authusers.models import User
 from .forms import SignUpForm, CustomAuthenticationForm, EditUserProfileForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib.auth import login, authenticate,logout,update_session_auth_hash
 from django.contrib import messages
@@ -60,11 +61,18 @@ def login_view(request):
         form = CustomAuthenticationForm()           
     return render(request, 'authusers/login.html',{'form':form})
 
-
+@login_required
 def user_profile(request):
+    if request.method == "POST":
+        form = EditUserProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'User Updated Successfully!')
+            update_session_auth_hash(request, form.user)  # Update the session to avoid logout
+    else:
+        form = EditUserProfileForm(instance=request.user)
     
-    
-    return render(request,'authusers/profile.html')
+    return render(request, 'authusers/profile.html', {'form': form})
 
 
 def logout_view(request):
@@ -81,10 +89,10 @@ def changepass1 (request):
                 #This function is user to maintain the session for the user.
                 update_session_auth_hash(request,form.user)
                 messages.info(request,'Password Saved Successfully!')
-                return HttpResponseRedirect('/profile/',)
+                return redirect('authusers:user_change_pass')
         else:
             form = PasswordChangeForm(user=request.user)
-        return render(request,'changepass.html',{"form": form})
+        return render(request,'authusers/changepassword.html',{"form": form})
     else:
         messages.error(request,'You have no rights to access this page!')
-        return HttpResponseRedirect('/login/')
+        return redirect('authusers:sign-up')

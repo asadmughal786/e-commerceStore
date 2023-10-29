@@ -16,18 +16,21 @@
         <div class="card-body">
             <div class="account-settings">
                 <div class="user-profile">
+                    <div class="about">
+                        <h5>About</h5>
+                        <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
+                    </div>
                     <div class="aside" >
                         <hr>
-                        <a href="#" class="w3-bar-item w3-button">Change Password</a><br>
+                        <a href="{% url 'authusers:user-profile' %}" class="w3-bar-item w3-button">User Profile Password</a><br>
+                        <hr>
+                        <a href="{% url 'authusers:user_change_pass' %}" class="w3-bar-item w3-button">Change Password</a><br>
                         <hr>
                         <a href="#" class="w3-bar-item w3-button">Address</a>
                         <hr>
                     </div>
                 </div>
-                <div class="about">
-                    <h5>About</h5>
-                    <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
-                </div>
+                
             </div>
         </div>
     </div>
@@ -35,72 +38,55 @@
     <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
     <div class="card h-100">
         <div class="card-body">
-            <div class="row gutters">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mb-2 text-primary">Personal Details</h6>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="fullName">Full Name</label>
-                        <input type="text" class="form-control" id="fullName" placeholder="Enter full name">
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row gutters">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <h6 class="mb-2 text-primary">Personal Details</h6>
+                    </div>
+                    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                        <div class="form-group">
+                            <label for="{{ form.username.id_for_label }}">Username</label>
+                            <input type="text" class="form-control" id="{{ form.username.id_for_label }}" name="{{ form.username.name }}" placeholder="Username" value="{{ form.username.value }}" readonly>
+                            <small class="text-danger">{{ form.username.errors|striptags }}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.first_name.id_for_label }}">First Name</label>
+                            <input type="text" class="form-control" id="{{ form.first_name.id_for_label }}" name="{{ form.first_name.name }}" placeholder="First Name" value="{{ form.first_name.value }}" readonly>
+                            <small class="text-danger">{{ form.first_name.errors|striptags }}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+                            <input type="text" class="form-control" id="{{ form.last_name.id_for_label }}" name="{{ form.last_name.name }}" placeholder="Last Name" value="{{ form.last_name.value }}" readonly>
+                            <small class="text-danger">{{ form.last_name.errors|striptags }}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.email.id_for_label }}">Email</label>
+                            <input type="text" class="form-control" id="{{ form.email.id_for_label }}" name="{{ form.email.name }}" placeholder="Email" value="{{ form.email.value }}" readonly>
+                            <small class="text-danger">{{ form.email.errors|striptags }}</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.user_phone.id_for_label }}">Phone No</label>
+                            <input type="text" class="form-control" id="{{ form.user_phone.id_for_label }}" name="{{ form.user_phone.name }}" placeholder="3xxxxxxxx" value="{{ form.user_phone.value }}" readonly>
+                            <small class="text-danger">{{ form.user_phone.errors|striptags }}</small>
+                        </div>
+                        
+                        {% if form.non_field_errors %}
+                            {% for error in form.non_field_errors %}
+                                <p class="alert alert-danger my-3">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="eMail">Email</label>
-                        <input type="email" class="form-control" id="eMail" placeholder="Enter email ID">
+                {% comment %} <div class="row gutters">
+                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                        <div class="text-right">
+                            <button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
+                            <input type="submit" value="Update Profile" class="btn btn-primary mt-4"> <br>
+                        </div>
                     </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" placeholder="Enter phone number">
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="website">Website URL</label>
-                        <input type="url" class="form-control" id="website" placeholder="Website url">
-                    </div>
-                </div>
-            </div>
-            <div class="row gutters">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <h6 class="mt-3 mb-2 text-primary">Address</h6>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="Street">Street</label>
-                        <input type="name" class="form-control" id="Street" placeholder="Enter Street">
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="ciTy">City</label>
-                        <input type="name" class="form-control" id="ciTy" placeholder="Enter City">
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="sTate">State</label>
-                        <input type="text" class="form-control" id="sTate" placeholder="Enter State">
-                    </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                    <div class="form-group">
-                        <label for="zIp">Zip Code</label>
-                        <input type="text" class="form-control" id="zIp" placeholder="Zip Code">
-                    </div>
-                </div>
-            </div>
-            <div class="row gutters">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                    <div class="text-right">
-                        <button type="button" id="submit" name="submit" class="btn btn-secondary">Cancel</button>
-                        <button type="button" id="submit" name="submit" class="btn btn-primary">Update</button>
-                    </div>
-                </div>
-            </div>
+                </div> {% endcomment %}
+            </form>            
         </div>
     </div>
     </div>

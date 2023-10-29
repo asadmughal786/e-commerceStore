@@ -236,7 +236,7 @@ def cart_view(request):
 
     else:
         print("else part is working")
-        messages.warning(request,"You cart is empty")
+        messages.warning(request,"Your cart is empty")
         return redirect("coreapp:index")
     
 

@@ -213,7 +213,7 @@
 	{% if messages %}
 	{% for message in messages %}
 	<div class="alert alert-{{message.tags}}"id="errorAlert" role="alert">
-		{{message}}
+		<h5 style="text-align: center;">{{message}}</h5>
 	</div>
 	{% endfor %}
 	{% endif %}
@@ -236,6 +236,11 @@
 
 	
 	{% block profile %}{% endblock profile %}
+	
+	{% block changepassword %}
+		
+	{% endblock changepassword %}
+		
 		
 		
 		
