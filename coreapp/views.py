@@ -1,6 +1,6 @@
 from django.http import HttpResponse, JsonResponse
 from django.contrib import messages
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.template.loader import render_to_string
 from django.db.models import Count, Avg
 from .models import *
@@ -216,8 +216,6 @@ def added_to_cart(request):
         'totalCartItems': len(request.session['cart_data_obj'])
     })
 
-
-
 # Cart View
 
 def cart_view(request):
@@ -243,11 +241,10 @@ def cart_view(request):
 
 def delete_item_from_cart(request):
     product_id = str(request.GET['id'])
-    if 'cart_data_obj' in request.session:
-        if product_id in request.session['cart_data_obj']:
-            cart_data = request.session["cart_data_obj"]
-            del request.session['cart_data_obj'][product_id]
-            request.session['cart_data_obj'] =  cart_data
+    if 'cart_data_obj' in request.session and product_id in request.session['cart_data_obj']:
+        cart_data = request.session["cart_data_obj"]
+        del request.session['cart_data_obj'][product_id]
+        request.session['cart_data_obj'] =  cart_data
     cart_total_amount = 0
     if 'cart_data_obj' in request.session:
         for product_id, item in request.session['cart_data_obj'].items():
@@ -260,40 +257,47 @@ def delete_item_from_cart(request):
         'totalCartItems': len(request.session['cart_data_obj'])
     })
 
-@login_required
-def checkout_view (request):
-    
-    
-    if 'cart_data_obj' in request.session:
-        print("Entered in View Cart")
-        cart_total_amount = 0
-        total_amount = 0
-        # cart total amount
-        for product_id, item in request.session['cart_data_obj'].items():
-            total_amount += int(item['qty']) * float(item['price'])
-            print('\nTotal Cart Amount--->>', total_amount)
-        
-        # Cart Order Object Creating 
-        order = CartOrders.objects.create(
-            user = request.user,
-            price = total_amount,
+
+def checkout_view(request):
+    if request.user.is_authenticated:
+        if 'cart_data_obj' in request.session:
+            return _extracted_from_checkout_view_4(request)
+    else:
+        messages.error(request,"Please login First to proceed with your order")
+        return redirect("authusers:sign-in")
+
+
+# TODO Rename this here and in `checkout_view`
+def _extracted_from_checkout_view_4(request):
+    cart_total_amount = 0
+    total_amount = 0
+    # cart total amount
+    for product_id, item in request.session['cart_data_obj'].items():
+        total_amount += int(item['qty']) * float(item['price'])
+        print('\nTotal Cart Amount--->>', total_amount)
+
+    # Cart Order Object Creating 
+    order = CartOrders.objects.create(
+        user = request.user,
+        price = total_amount,
+    )
+    for product_id, item in request.session['cart_data_obj'].items():
+        cart_total_amount += int(item['qty']) * float(item['price'])
+        # print('\nTotal Cart Amount--->>', cart_total_amount)
+        cart_order_products = CartOrderItems.objects.create(
+            order = order,
+            invoice_no = f"INVOICE-NO-{order.id}",
+            item = item['title'],
+            image = item['image'],
+            qty = item['qty'],
+            color = item['color'],
+            price = item['price'],
+            total_amount = float(item['qty']) * float(item['price'])
         )
-        for product_id, item in request.session['cart_data_obj'].items():
-            cart_total_amount += int(item['qty']) * float(item['price'])
-            print('\nTotal Cart Amount--->>', cart_total_amount)
-            cart_order_products = CartOrderItems.objects.create(
-                order = order,
-                invoice_no = "INVOICE-NO-"+ str(order.id),
-                item = item['title'],
-                image = item['image'],
-                qty = item['qty'],
-                price = item['price'],
-                total_amount = float(item['qty']) * float(item['price'])
-            )
-        
+
     return render(request,'coreapp/payment_checkout.html',{"cart_data": request.session["cart_data_obj"],'totalCartItems': len(request.session['cart_data_obj']),
-                "TotalAmount": cart_total_amount
-                })
+            "TotalAmount": cart_total_amount
+            })
     
 def invoice_view(request):
     return render(request,'coreapp/invoice.html')

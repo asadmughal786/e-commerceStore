@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     
     # 3rd party apps
     'ckeditor',
@@ -145,6 +146,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 AUTH_USER_MODEL = 'authusers.User'
+
+LOGIN_URL = '/user/sign-in/' 
 
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'

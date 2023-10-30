@@ -11,10 +11,10 @@ from ckeditor_uploader.fields import RichTextUploadingField
 # Create your models here.
 
 
-STATUS_CHOICES = (
-    ('process', 'Processing'),
-    ('shipped', 'Shipped'),
-    ('delivered', 'Delivered'),
+CHOICES = (
+    ('Process', 'Processing'),
+    ('Shipped', 'Shipped'),
+    ('Delivered', 'Delivered'),
 )
 
 STATUS = (
@@ -161,7 +161,7 @@ class CartOrders(models.Model):
     payment_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
     product_status = models.CharField(
-        choices=STATUS_CHOICES, max_length=30, default='process')
+        choices=CHOICES, max_length=30, default='Process')
 
     class Meta:
         verbose_name_plural = 'Cart Orders'
@@ -173,6 +173,7 @@ class CartOrderItems(models.Model):
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)
     qty = models.PositiveIntegerField(default=0)
+    color = models.CharField(max_length=10,blank=True)
     price = models.DecimalField(
         max_digits=100, decimal_places=2, default=0.00)
     total_amount = models.DecimalField(

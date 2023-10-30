@@ -2156,6 +2156,17 @@ textarea.input {
   margin: 15px 0px;
 }
 
+/*----------------------------*\
+	Tables
+\*----------------------------*/
+.table-container {
+  max-height: 400px; /* Adjust the maximum height as needed */
+  overflow-y: auto;
+}
+.centered-table th, .centered-table td {
+  text-align: center;
+}
+
 /*=========================================================
 	13 -> RESPONSIVE
 ===========================================================*/

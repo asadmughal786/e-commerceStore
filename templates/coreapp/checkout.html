@@ -1,75 +1,83 @@
 {% extends 'partials/base.html' %}
-{% load static %} 
+{% load static %}
 {% block cart %}
+  {% load humanize %}
 
+  <!-- SECTION -->
+  <div class="section" id="cart-check-refresh">
+    <!-- container -->
+    <div class="container">
+      <!-- row -->
+      <div class="row">
+        <!-- Order Details -->
+        <div class="col-md-5 order-details">
+          <div class="section-title text-center">
+            <h3 class="title">Your Order</h3>
+          </div>
+          <div class="order-summary">
+            <hr />
+            <div class="order-col">
+              <div>
+                <strong>No. of Products</strong>
+              </div>
+              <div>
+                <strong>{{ totalCartItems }}</strong>
+              </div>
+            </div>
+            <hr />
+            <div class="order-col">
+              <div>
+                <strong>PRODUCT</strong>
+              </div>
+              <div>
+                <strong>TOTAL</strong>
+              </div>
+            </div>
 
-		<!-- SECTION -->
-		<div class="section" id="cart-check-refresh">
-			<!-- container -->
-			<div class="container">
-				<!-- row -->
-				<div class="row">
+            <div class="order-products">
+              {% if cart_data.items %}
+                {% for product_id, item in cart_data.items %}
+                  <div class="order-col">
+                    <div>
+                      {{ item.qty }} x <a href="{% url 'coreapp:product-detials' item.pid %}">{{ item.title }}</a> ({{ item.color }})
+                    </div>
+                    <div>
+                      PKR{% widthratio item.price 1 item.qty %} <button class="delete-product" data-product="{{ product_id }}" style="border: none; background: transparent;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    </div>
+                  </div>
+                {% endfor %}
+              {% else %}
+                <h3>No products in cart</h3>
+              {% endif %}
+            </div>
+            <hr />
 
-					<!-- Order Details -->
-					<div class="col-md-5 order-details">
-						<div class="section-title text-center">
-							<h3 class="title">Your Order</h3>
-						</div>
-						<div class="order-summary">
-							<hr>
-							<div class="order-col">
-								<div><strong>No. of Products</strong></div>
-								<div><strong>{{totalCartItems}}</strong></div>
-							</div>
-							<hr>
-							<div class="order-col">
-								<div><strong>PRODUCT</strong></div>
-								<div><strong>TOTAL</strong></div>
-							</div>
-							
+            <div class="order-col">
+              <div>Shiping</div>
+              <div>
+                <strong>FREE</strong>
+              </div>
+            </div>
+            <hr />
+            <div class="order-col">
+              <div>
+                <strong>TOTAL Amount</strong>
+              </div>
+              <div>
+                <strong class="order-total">PKR.{{ TotalAmount|floatformat:2 }}</strong>
+              </div>
+            </div>
+          </div>
 
-							<div class="order-products">
-								
-								{% if cart_data.items %}
-								
-								{% for product_id, item in cart_data.items %}
-								<div class="order-col">
-									<div>{{item.qty}}x <a href="{% url 'coreapp:product-detials' item.pid %}">{{item.title}}</a> ({{item.color}})</div>
-									<div>Rs. {% widthratio item.price 1 item.qty %} <button class="delete-product" data-product="{{product_id}}" style="border: none; background: transparent;"><i class="fa fa-trash" aria-hidden="true"></i></button></div>
-								</div>
-									
-								{% endfor %}
-									{% else %}
-									<h3>No products in cart</h3>
-								
-								{% endif %}
-									
-							</div>
-							<hr>
-							
-							<div class="order-col">
-								<div>Shiping</div>
-								<div><strong>FREE</strong></div>
-							</div>
-							<hr>
-							<div class="order-col">
-								<div><strong>TOTAL Amount</strong></div>
-								<div><strong class="order-total">Rs.{{TotalAmount|floatformat:2 }}</strong></div>
-							</div>
-						</div>
-						
-						{% if totalCartItems %}
-						<a href="{% url 'coreapp:checkout' %}" class="primary-btn order-submit">Proceed to checkout</a>
-						{% endif %}
-					</div>
-					<!-- /Order Details -->
-				</div>
-				<!-- /row -->
-			</div>
-			<!-- /container -->
-		</div>
-		<!-- /SECTION -->
-
-	
-{% endblock cart %}
-	
+          {% if totalCartItems %}
+            <a href="{% url 'coreapp:checkout' %}" class="primary-btn order-submit">Proceed to checkout</a>
+          {% endif %}
+        </div>
+        <!-- /Order Details -->
+      </div>
+      <!-- /row -->
+    </div>
+    <!-- /container -->
+  </div>
+  <!-- /SECTION -->
+{% endblock %}

@@ -56,7 +56,7 @@ class CartOrderAdmin(admin.ModelAdmin):
 
 @admin.register(CartOrderItems)
 class CartOrderItemsAdmin(admin.ModelAdmin):
-    list_display = ['id','order', 'invoice_no', 'item',
+    list_display = ['id', 'invoice_no', 'item','color',
                     'avatar_tag', 'qty', 'price', 'total_amount']
     def avatar_tag(self, obj):
         if isinstance(obj.image, str):

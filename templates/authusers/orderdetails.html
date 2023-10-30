@@ -1,0 +1,83 @@
+{% extends 'partials/base.html' %}
+{% load static %}
+
+{% block orders %}
+  {% load humanize %}
+
+  <div class="Profile-tag">
+    <h2 class="Profile-h2">Profile</h2>
+  </div>
+  <div class="profile-container">
+    <div class="row gutters">
+      <div class="col-xl-3 col-lg-3 col-md-12 col-sm-12 col-12">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="account-settings">
+              <div class="user-profile">
+                <div class="about">
+                  <h5>About</h5>
+                  <p>I'm Yuki. Full Stack Designer I enjoy creating user-centric, delightful and human experiences.</p>
+                </div>
+                <br /><br />
+                <div class="aside">
+                  <hr />
+                  <a href="{% url 'authusers:user-profile' %}" class="w3-bar-item w3-button">User Profile Password</a><br />
+                  <hr />
+                  <a href="{% url 'authusers:user_change_pass' %}" class="w3-bar-item w3-button">Change Password</a><br />
+                  <hr />
+                  <a href="{% url 'authusers:user_orders' %}" class="w3-bar-item w3-button">Orders</a><br />
+                  <hr />
+                  <a href="#" class="w3-bar-item w3-button">Address</a>
+                  <hr />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+        <div class="card h-100">
+          <div class="card-body">
+            <div class="table-container">
+              <div class="table-responsive">
+                <table class="table centered-table">
+                  <thead>
+                    <tr>
+                      <th>Invoice #</th>
+                      <th>Product</th>
+                      <th>Color</th>
+                      <th>Qty</th>
+                      <th>Price</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% if products %}
+                      {% for product in products %}
+                        <tr>
+                          <td>{{ product.invoice_no }}</td>
+                          <td>{{ product.item }}</td>
+                          <td>{{ product.color }}</td>
+                          <td>{{ product.qty }}</td>
+                          <td>{{ product.price }}</td>
+                          <td>
+                            <a href="" class="btn btn-primary" style="background-color: #D10024; color: white;">View Order</a>
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    {% else %}
+                      <strong><i>No records Found</i></strong>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="text-right">
+                {% comment %} <input type="submit" value="Update Password" class="btn btn-dark" style="background-color: #D10024; color: white;" /> {% endcomment %}
+                <a href="{% url 'authusers:user_orders' %}" class="btn btn-dark" style="background-color: #D10024; color: white;">Back</a><br />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

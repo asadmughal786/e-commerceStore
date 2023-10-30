@@ -9,9 +9,13 @@
 .Profile-tag{
     padding-top: 20px;
     padding-bottom: 10px;
+
 }
-.Profile-tag, h2{
+.Profile-tag .Profile-h2{
     text-align: center;
+    font-size: 4rem;
+    font-weight: bold;
+    
 }
 .account-settings .user-profile {
     margin: 0 0 1rem 0;
@@ -43,7 +47,7 @@
 }
 .account-settings .about h5 {
     margin: 0 0 15px 0;
-    color: #007ae1;
+    color: black;
 }
 .account-settings .about p {
     font-size: 0.825rem;

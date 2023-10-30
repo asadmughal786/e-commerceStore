@@ -1,6 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block product_detail %}
 
 <!-- BREADCRUMB -->
@@ -83,8 +83,8 @@
             <i class="review-link" href="">{{product_review_count}} Review(s)</i>
           </div>
           <div>
-            <h3 class="product-price">Rs. <h3 class="product-price" id="product-price-val-{{products.id}}"> {{products.price }} </h3>
-              <del class="product-old-price">{{ products.old_price }}</del>
+            <h3 class="product-price">PKR. <h3 class="product-price" id="product-price-val-{{products.id}}"> {{products.price }} </h3>
+              <del class="product-old-price">{{ products.old_price  }}</del>
             </h3>
             <span class="product-available">{{ products.in_stock|yesno:'in stock,out of stock' }}</span>
           </div>
@@ -435,8 +435,8 @@
               <h3 class="product-name"><a href="{% url 'coreapp:product-detials' product.pid %}">{{ product.title }}</a>
               </h3>
               <h4 class="product-price">
-                Rs. {{ product.price }} <del class="product-old-price">Rs.
-                  {{ product.old_price }}</del>
+                PKR {{ product.price | intcomma }} <del class="product-old-price">PKR.
+                  {{ product.old_price | intcomma }}</del>
               </h4>
               <div class="product-rating">
 
@@ -454,7 +454,6 @@
               </div>
             </div>
             <div class="add-to-cart">
-
               <button type="submit" class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
             </div>
           </div>

@@ -1,6 +1,6 @@
 {% extends 'partials/base.html' %}
 {% load static %}
-
+{% load humanize %}
 {% block product_page %}
 
 
@@ -224,9 +224,9 @@
                           <p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
                         {% endif %}
 		
-                          <h4 class="product-price">Rs. <h3 class="product-price"
-                          id="product-price-val-{{product.id}}"> {{ product.price }} </h3> <del
-                          class="product-old-price">{{ product.old_price }}</del></h4>
+                          <h4 class="product-price">PKR <h3 class="product-price"
+                          id="product-price-val-{{product.id}}"> {{ product.price  }} </h3> <del
+                          class="product-old-price">{{ product.old_price  }}</del></h4>
 
                       <div class="product-rating">
                         {% if product.average_review > 0 %}

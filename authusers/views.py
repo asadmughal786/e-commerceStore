@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib.auth import login, authenticate,logout,update_session_auth_hash
 from django.contrib import messages
+from coreapp.models import CartOrders, CartOrderItems, ProductColor
 # Create your views here.
 
 def register_view(request):
@@ -96,3 +97,21 @@ def changepass1 (request):
     else:
         messages.error(request,'You have no rights to access this page!')
         return redirect('authusers:sign-up')
+    
+
+def orders_views(request):
+    if request.user.is_authenticated:
+        orders = CartOrders.objects.filter( user=request.user).order_by('-id')
+        return render(request,'authusers/orders.html',{'orders':orders})
+    else:
+        messages.error(request,"Please login First to proceed with your order")
+        return redirect('authusers:sign-in')
+
+def order_detail_view(request,id):
+    if request.user.is_authenticated:
+        order = CartOrders.objects.get(user=request.user,id=id)
+        products = CartOrderItems.objects.filter(order=order)
+        print(f"order items: {products.values()}")
+        return render(request, 'authusers/orderdetails.html', {'products':products})  
+    else:
+        messages.error(request, "Please Login first to see the Orders Details")
