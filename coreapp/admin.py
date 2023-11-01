@@ -50,7 +50,7 @@ class ProductAdmin(admin.ModelAdmin):
 @admin.register(CartOrders)
 class CartOrderAdmin(admin.ModelAdmin):
     list_editable = ['payment_status','product_status']
-    list_display = ['id','user', 'price', 'payment_status',
+    list_display = ['id','user', 'price', 'payment_status','payment_type',
                     'order_date', 'product_status']
 
 

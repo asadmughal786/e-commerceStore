@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm, SetPasswordForm
 from django.contrib.auth import login, authenticate,logout,update_session_auth_hash
 from django.contrib import messages
-from coreapp.models import CartOrders, CartOrderItems, ProductColor
+from coreapp.models import CartOrders, CartOrderItems, Address
 # Create your views here.
 
 def register_view(request):
@@ -115,3 +115,10 @@ def order_detail_view(request,id):
         return render(request, 'authusers/orderdetails.html', {'products':products})  
     else:
         messages.error(request, "Please Login first to see the Orders Details")
+        
+
+def create_address(request):
+    if request.user.is_authenticated:
+        addresss = Address.objects.filter(user = request.user)
+        
+        

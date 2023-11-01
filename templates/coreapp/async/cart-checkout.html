@@ -1,10 +1,103 @@
 {% load humanize %}
+
 <!-- SECTION -->
 <div class="section" id="cart-check-refresh">
   <!-- container -->
   <div class="container">
     <!-- row -->
     <div class="row">
+      <div class="col-md-7">
+        <!-- Billing Details -->
+        <div class="billing-details">
+          <div class="section-title">
+            <h3 class="title">Billing address</h3>
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="first-name" placeholder="First Name" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="last-name" placeholder="Last Name" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="email" name="email" placeholder="Email" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="address" placeholder="Address" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="city" placeholder="City" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="country" placeholder="Country" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="text" name="zip-code" placeholder="ZIP Code" />
+          </div>
+          <div class="form-group">
+            <input class="input" type="tel" name="tel" placeholder="Telephone" />
+          </div>
+          <div class="form-group">
+            <div class="input-checkbox">
+              <input type="checkbox" id="create-account" />
+              <label for="create-account">
+                <span></span>
+                Create Account?
+              </label>
+              <div class="caption">
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt.</p>
+                <input class="input" type="password" name="password" placeholder="Enter Your Password" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Billing Details -->
+        <!-- Shiping Details -->
+        <div class="shiping-details">
+          <div class="section-title">
+            <h3 class="title">Shiping address</h3>
+          </div>
+          <div class="input-checkbox">
+            <input type="checkbox" id="shiping-address" />
+            <label for="shiping-address">
+              <span></span>
+              Ship to a diffrent address?
+            </label>
+            <div class="caption">
+              <div class="form-group">
+                <input class="input" type="text" name="first-name" placeholder="First Name" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="last-name" placeholder="Last Name" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="email" name="email" placeholder="Email" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="address" placeholder="Address" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="city" placeholder="City" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="country" placeholder="Country" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="text" name="zip-code" placeholder="ZIP Code" />
+              </div>
+              <div class="form-group">
+                <input class="input" type="tel" name="tel" placeholder="Telephone" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /Shiping Details -->
+
+        <!-- Order notes -->
+        <div class="order-notes">
+          <textarea class="input" placeholder="Order Notes"></textarea>
+        </div>
+        <!-- /Order notes -->
+      </div>
       <!-- Order Details -->
       <div class="col-md-5 order-details">
         <div class="section-title text-center">
@@ -35,10 +128,10 @@
               {% for product_id, item in cart_data.items %}
                 <div class="order-col">
                   <div>
-                    {{ item.qty }}x <a href="{% url 'coreapp:product-detials' item.pid %}">{{ item.title }}</a> ({{ item.color }})
+                    {{ item.qty }} x <a href="{% url 'coreapp:product-detials' item.pid %}">{{ item.title }}</a> ({{ item.color }})
                   </div>
                   <div>
-                    Rs.{% widthratio item.price 1 item.qty %} <button class="delete-product" data-product="{{ product_id }}" style="border: none; background: transparent;"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                    PKR{% widthratio item.price 1 item.qty %} <button class="delete-product" data-product="{{ product_id }}" style="border: none; background: transparent;"><i class="fa fa-trash" aria-hidden="true"></i></button>
                   </div>
                 </div>
               {% endfor %}
@@ -60,16 +153,19 @@
               <strong>TOTAL Amount</strong>
             </div>
             <div>
-              <strong class="order-total">Rs.{{ TotalAmount|floatformat:2 }}</strong>
+              <strong class="order-total">PKR.{{ TotalAmount|floatformat:2 }}</strong>
             </div>
           </div>
         </div>
 
         {% if totalCartItems %}
           <a href="{% url 'coreapp:checkout' %}" class="primary-btn order-submit">Proceed to checkout</a>
+          {% else %}
+            <a href="{% url 'coreapp:index' %}" class="primary-btn order-submit">Back to shopping</a>
         {% endif %}
+
+        <!-- /Order Details -->
       </div>
-      <!-- /Order Details -->
     </div>
     <!-- /row -->
   </div>

@@ -279,6 +279,7 @@ def _extracted_from_checkout_view_4(request):
     # Cart Order Object Creating 
     order = CartOrders.objects.create(
         user = request.user,
+        payment_type = 'COD',
         price = total_amount,
     )
     for product_id, item in request.session['cart_data_obj'].items():
@@ -294,10 +295,10 @@ def _extracted_from_checkout_view_4(request):
             price = item['price'],
             total_amount = float(item['qty']) * float(item['price'])
         )
-
-    return render(request,'coreapp/payment_checkout.html',{"cart_data": request.session["cart_data_obj"],'totalCartItems': len(request.session['cart_data_obj']),
-            "TotalAmount": cart_total_amount
-            })
+    if 'cart_data_obj' in request.session:
+        del request.session['cart_data_obj']
+    messages.success(request,'Thank you! Your order has been placed')
+    return redirect("coreapp:index")
     
 def invoice_view(request):
     return render(request,'coreapp/invoice.html')

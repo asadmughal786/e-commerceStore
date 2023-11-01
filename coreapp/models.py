@@ -160,11 +160,14 @@ class CartOrders(models.Model):
         max_digits=100, decimal_places=3, default=0.00)
     payment_status = models.BooleanField(default=False)
     order_date = models.DateTimeField(auto_now_add=True)
+    payment_type = models.CharField(max_length=10, blank=True)
     product_status = models.CharField(
         choices=CHOICES, max_length=30, default='Process')
 
     class Meta:
         verbose_name_plural = 'Cart Orders'
+    def __str__(self):
+        return f'Order-{self.id}'
 
 
 class CartOrderItems(models.Model):
@@ -218,6 +221,9 @@ class Wishlist(models.Model):
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     address = models.CharField(max_length=100, null=True)
+    city = models.CharField(max_length=20, blank=True)
+    country = models.CharField(max_length=20, blank=True)
+    zip_code = models.CharField(max_length=10,blank=True)
     status = models.BooleanField(default=False)
 
     class Meta:

@@ -38,7 +38,7 @@ urlpatterns = [
     path('add-to-cart/',include(AddToCartUrlPatterns)),
     path('cart/', views.cart_view, name='cart'),
     path('delete-from-cart/', views.delete_item_from_cart, name="delete-from-cart"),
-    path('checkout/',views.checkout_view, name='checkout'),
+    path('place-order/',views.checkout_view, name='checkout'),
     path('invoice/',views.invoice_view, name='invoice'),
     path('ajax-add-review/<int:pid>/',views.ajax_add_review, name='ajax-add-review'),
     
