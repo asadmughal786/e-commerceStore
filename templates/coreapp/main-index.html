@@ -187,22 +187,6 @@
             <div class="col-md-12">
                 <div class="section-title">
                     <h3 class="title">Top selling</h3>
-                    <div class="section-nav">
-                        <ul class="section-tab-nav tab-nav">
-                            <li class="active">
-                                <a data-toggle="tab" href="#tab2">Laptops</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#tab2">Smartphones</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#tab2">Cameras</a>
-                            </li>
-                            <li>
-                                <a data-toggle="tab" href="#tab2">Accessories</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
             </div>
             <!-- /section title -->
@@ -215,61 +199,38 @@
                         <div id="tab2" class="tab-pane fade in active">
                             <div class="products-slick" data-nav="#slick-nav-2">
                                 <!-- product -->
+                                {% if top_products %}
+                                {% for product in top_products %}
                                 <div class="product">
                                     <div class="product-img">
-                                        <img src="{% static './img/product06.png' %}" alt="" />
+                                        <img src="{{ product.prod_image.url }}" alt="{{ product.title }}">
                                         <div class="product-label">
                                             <span class="sale">-30%</span>
                                             <span class="new">NEW</span>
                                         </div>
                                     </div>
                                     <div class="product-body">
-                                        <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                        <h4 class="product-price">$980.00<del class="product-old-price">$990.00</del>
-                                        </h4>
+                                        <p class="product-category">{{ product.category.name }}</p>
+                                        <h3 class="product-name"><a
+                                                href="{% url 'coreapp:product-detials' product.pid %}">{{product.title}}</a></h3>
+                                        {% if product.productcolor_set.all %}
+                                        <p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
+                                            {% endif %}
+                                        <h4 class="product-price">PKR <h3 class="product-price"
+                                                id="product-price-val-{{product.id}}"> {{ product.price}} </h3> <del
+                                                class="product-old-price">{{ product.old_price }}</del></h4>
                                         <div class="product-rating">
+                                            {% if product.average_rating > 0 %}
+                                            {% for s in product.average_rating|ljust:product.average_rating %}
                                             <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
-                                                    class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span
-                                                    class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span
-                                                    class="tooltipp">quick view</span></button>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to
-                                            cart</button>
-                                    </div>
-                                </div>
-                                <!-- /product -->
-
-                                <!-- product -->
-                                <div class="product">
-                                    <div class="product-img">
-                                        <img src="{% static './img/product07.png' %}" alt="" />
-                                        <div class="product-label">
-                                            <span class="new">NEW</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                        <h4 class="product-price">$980.00<del class="product-old-price">$990.00</del>
-                                        </h4>
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
+                                            {% endfor %}
+                                            {% else %}
                                             <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            {% endif %}
                                         </div>
                                         <div class="product-btns">
                                             <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
@@ -281,107 +242,27 @@
                                         </div>
                                     </div>
                                     <div class="add-to-cart">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to
-                                            cart</button>
+                                        <input type="hidden" class="Product-pid-{{ product.id }}"
+                                            value="{{ product.pid }}">
+                                        <input type="hidden" class="Product-color-{{ product.id }}"
+                                            value="{{ product.productcolor_set.all.0.color }}">
+                                        <input type="hidden" class="product-quantity-{{ product.id }}" value="1">
+                                        <input type="hidden" class="Product-image-{{ product.id }}"
+                                            value="{{ product.prod_image.url }}">
+                                        <input type="hidden" class="Product-id-{{ product.id }}"
+                                            value="{{ product.id }}">
+                                        <input type="hidden" class="Product-title-{{ product.id }}"
+                                            value="{{ product.title }}">
+                                        <button class="add-to-cart-btn" data-index="{{ product.id }}"><i
+                                                class="fa fa-shopping-cart"></i> add to cart</button>
                                     </div>
                                 </div>
+                                {% endfor %}
+                                {% else %}
+                                <h6>No product found</h6>
+                                {% endif %}
                                 <!-- /product -->
 
-                                <!-- product -->
-                                <div class="product">
-                                    <div class="product-img">
-                                        <img src="{% static './img/product08.png' %}" alt="" />
-                                        <div class="product-label">
-                                            <span class="sale">-30%</span>
-                                        </div>
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                        <h4 class="product-price">$980.00<del class="product-old-price">$990.00</del>
-                                        </h4>
-                                        <div class="product-rating"></div>
-                                        <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
-                                                    class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span
-                                                    class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span
-                                                    class="tooltipp">quick view</span></button>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to
-                                            cart</button>
-                                    </div>
-                                </div>
-                                <!-- /product -->
-
-                                <!-- product -->
-                                <div class="product">
-                                    <div class="product-img">
-                                        <img src="{% static './img/product09.png' %}" alt="" />
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                        <h4 class="product-price">$980.00<del class="product-old-price">$990.00</del>
-                                        </h4>
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
-                                                    class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span
-                                                    class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span
-                                                    class="tooltipp">quick view</span></button>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to
-                                            cart</button>
-                                    </div>
-                                </div>
-                                <!-- /product -->
-
-                                <!-- product -->
-                                <div class="product">
-                                    <div class="product-img">
-                                        <img src="{% static './img/product01.png' %}" alt="" />
-                                    </div>
-                                    <div class="product-body">
-                                        <p class="product-category">Category</p>
-                                        <h3 class="product-name"><a href="#">product name goes here</a></h3>
-                                        <h4 class="product-price">$980.00<del class="product-old-price">$990.00</del>
-                                        </h4>
-                                        <div class="product-rating">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <div class="product-btns">
-                                            <button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span
-                                                    class="tooltipp">add to wishlist</span></button>
-                                            <button class="add-to-compare"><i class="fa fa-exchange"></i><span
-                                                    class="tooltipp">add to compare</span></button>
-                                            <button class="quick-view"><i class="fa fa-eye"></i><span
-                                                    class="tooltipp">quick view</span></button>
-                                        </div>
-                                    </div>
-                                    <div class="add-to-cart">
-                                        <button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to
-                                            cart</button>
-                                    </div>
-                                </div>
-                                <!-- /product -->
                             </div>
                             <div id="slick-nav-2" class="products-slick-nav"></div>
                         </div>
@@ -400,7 +281,7 @@
 <!-- SECTION -->
 <!-- /SECTION -->
 
-<!-- NEWSLETTER -->
+{% comment %} <!-- NEWSLETTER -->
 <div id="newsletter" class="section">
     <!-- container -->
     <div class="container">
@@ -436,6 +317,6 @@
     </div>
     <!-- /container -->
 </div>
-<!-- /NEWSLETTER -->
+<!-- /NEWSLETTER --> {% endcomment %}
 
 {% endblock index %}

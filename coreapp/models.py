@@ -172,6 +172,7 @@ class CartOrders(models.Model):
 
 class CartOrderItems(models.Model):
     order = models.ForeignKey(CartOrders, on_delete=models.CASCADE)
+    product_id = models.IntegerField(blank=True)
     invoice_no = models.CharField(max_length=200)
     item = models.CharField(max_length=200)
     image = models.CharField(max_length=200)
@@ -216,7 +217,6 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return self.product.name
-
 
 class Address(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
