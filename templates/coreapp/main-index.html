@@ -9,6 +9,7 @@
     <div class="container">
         <!-- row -->
         <div class="row">
+            <h2>CATEGORIES</h2>
             <!-- Shop Categories -->
             {% if categories %}
             {% for category in categories %}
@@ -46,8 +47,8 @@
                     <div class="products-tabs">
                         <!-- Product Tab -->
                         <div id="tab1" class="tab-pane active">
-                            <h2>New Product</h2>
-                            <hr>
+                            <h2>NEW PRODUCTS</h2>
+                            
                             <div class="products-slick" data-nav="#slick-nav-1">
                                 <!-- Product -->
                                 {% if categories_products %}
@@ -67,9 +68,10 @@
                                         {% if product.productcolor_set.all %}
                                         <p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
                                             {% endif %}
-                                        <h4 class="product-price">PKR <h3 class="product-price"
-                                                id="product-price-val-{{product.id}}"> {{ product.price}} </h3> <del
-                                                class="product-old-price">{{ product.old_price }}</del></h4>
+                                            <h4 class="product-price">PKR <h3 class="product-price"
+                                                id="product-price-val-{{product.id}}"> {{ product.price  }} </h3> {% if product.old_price != 0.00 %}
+                                                <del class="product-old-price">PKR.{{product.old_price}}</del>
+                                                {% endif %}</h4>
                                         <div class="product-rating">
                                             {% if product.average_rating > 0 %}
                                             {% for s in product.average_rating|ljust:product.average_rating %}
@@ -216,9 +218,10 @@
                                         {% if product.productcolor_set.all %}
                                         <p class="product-color-" style="color: {{product.productcolor_set.all.0.color}}; background-color: black;" >Color: {{ product.productcolor_set.all.0.color }}</p>
                                             {% endif %}
-                                        <h4 class="product-price">PKR <h3 class="product-price"
-                                                id="product-price-val-{{product.id}}"> {{ product.price}} </h3> <del
-                                                class="product-old-price">{{ product.old_price }}</del></h4>
+                                            <h4 class="product-price">PKR <h3 class="product-price"
+                                                id="product-price-val-{{product.id}}"> {{ product.price  }} </h3> {% if product.old_price != 0.00 %}
+                                                <del class="product-old-price">PKR.{{product.old_price}}</del>
+                                                {% endif %}</h4>
                                         <div class="product-rating">
                                             {% if product.average_rating > 0 %}
                                             {% for s in product.average_rating|ljust:product.average_rating %}

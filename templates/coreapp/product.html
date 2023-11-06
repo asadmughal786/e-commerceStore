@@ -84,7 +84,11 @@
           </div>
           <div>
             <h3 class="product-price">PKR. <h3 class="product-price" id="product-price-val-{{products.id}}"> {{products.price }} </h3>
+              
+              {% if products.old_price != 0.00 %}
               <del class="product-old-price">{{ products.old_price  }}</del>
+              {% endif %}
+                
             </h3>
             <span class="product-available">{{ products.in_stock|yesno:'in stock,out of stock' }}</span>
           </div>

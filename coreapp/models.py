@@ -87,7 +87,7 @@ class Product(BaseModel):
     price = models.DecimalField(
         max_digits=100, decimal_places=2, default=0.00)
     old_price = models.DecimalField(
-        max_digits=100, decimal_places=2, default=0.00)
+        max_digits=100, decimal_places=2, default=0.00, blank=True)
 
     product_status = models.CharField(
         choices=STATUS, max_length=10, default='in_review')

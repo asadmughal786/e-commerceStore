@@ -34,15 +34,15 @@
         <div id="aside" class="col-md-3">
           <!-- aside Widget -->
           <div class="aside">
-            <h3 class="aside-title">Categories</h3>
+            <h3 class="aside-title">brands</h3>
             <div class="checkbox-filter">
               {% if all_categories %}
                 {% for category in all_categories %}
                   <div class="input-checkbox">
-                    <input class="filter-checkbox" data-filter="{{category.cid}}" type="checkbox" id="category-2" />
+                    {% comment %} <input class="filter-checkbox" data-filter="{{category.cid}}" type="checkbox" id="category-2" /> {% endcomment %}
                     <label for="category-2">
                       <span></span>
-                      {{ category.name }}
+                      <a href="{% url 'coreapp:category-products' category.cid %}">{{category.name}}</a>
                       <small>({{ category.product_set.count }})</small>
                     </label>
                   </div>
@@ -77,7 +77,7 @@
           <!-- /aside Widget -->
 
           <!-- aside Widget -->
-          <div class="aside">
+          {% comment %} <div class="aside">
             <h3 class="aside-title">Brand</h3>
             <div class="checkbox-filter">
               <div class="input-checkbox">
@@ -129,7 +129,7 @@
                 </label>
               </div>
             </div>
-          </div>
+          </div> {% endcomment %}
           <!-- /aside Widget -->
 
           <!-- aside Widget -->
@@ -147,7 +147,11 @@
               <div class="product-body">
                 <p class="product-category">{{product.category}}</p>
                 <h3 class="product-name"><a href="{% url 'coreapp:product-detials' product.pid %}">{{product.title}}</a></h3>
-                <h4 class="product-price">PKR.{{product.price}}<del class="product-old-price">PKR.{{product.old_price}}</del></h4>
+                <h4 class="product-price">PKR.{{product.price}}
+                {% if product.old_price != 0.00 %}
+                <del class="product-old-price">PKR.{{product.old_price}}</del>
+                {% endif %}
+                  </h4>
               </div>
             </div>
             {% endfor %}
@@ -166,7 +170,7 @@
         <!-- STORE -->
         <div id="store" class="col-md-9">
           <!-- store top filter -->
-          <div class="store-filter clearfix">
+          {% comment %} <div class="store-filter clearfix">
             <div class="store-sort">
               <label>
                 Sort By:<select class="input-select">
@@ -190,7 +194,7 @@
                 <a href="#"><i class="fa fa-th-list"></i></a>
               </li>
             </ul>
-          </div>
+          </div> {% endcomment %}
           <!-- /store top filter -->
 
           <!-- store products -->
@@ -216,8 +220,9 @@
                         {% endif %}
 		
                           <h4 class="product-price">PKR <h3 class="product-price"
-                          id="product-price-val-{{product.id}}"> {{ product.price  }} </h3> <del
-                          class="product-old-price">{{ product.old_price  }}</del></h4>
+                          id="product-price-val-{{product.id}}"> {{ product.price  }} </h3> {% if product.old_price != 0.00 %}
+                          <del class="product-old-price">PKR.{{product.old_price}}</del>
+                          {% endif %}</h4>
 
                       <div class="product-rating">
                         {% if product.average_review > 0 %}

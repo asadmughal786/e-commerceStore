@@ -93,9 +93,9 @@
 							<form action="{% url 'coreapp:search' %}" method="GET">
 								<select class="input-select">
 									
-									<option>All Categories</option>
+									<option>All Categories</option> 
 									<hr>
-									{% if categories %}
+									{% comment %} {% if categories %}
 									{% for cat in  categories %}
 									<option>{{cat.name}}</option>
 										
@@ -104,8 +104,8 @@
 									<p><i>Categories not found</i></p>
 										
 									{% endif %}
-										
-								</select>
+										 {% endcomment %}
+								</select> 
 								<input class="input" placeholder="Search here" name="q">
 								<button type='submit' class="search-btn">Search</button>
 							</form>
