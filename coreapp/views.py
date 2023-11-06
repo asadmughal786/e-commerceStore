@@ -29,18 +29,18 @@ def index(request):
     ).filter(productreview__ratings__gt=4)
 
     # Print the products
-    if products_with_high_ratings:
-        for product in products_with_high_ratings:
-            print(f'Product ID: {product.id}')
-            print(f"Product Title: {product.title}")
-            print(f"Product Description: {product.description}")
-            print(f'Product Image: "{product.prod_image.url}')
-            print(f"Product Price: {product.price}")
-            print(f"Product Category: {product.category.name}")
-            print(f"Average Rating: {product.average_rating:.2f}")
-            print("\n")
-    else:
-        print('No products yet')
+    # if products_with_high_ratings:
+    #     for product in products_with_high_ratings:
+    #         print(f'Product ID: {product.id}')
+    #         print(f"Product Title: {product.title}")
+    #         print(f"Product Description: {product.description}")
+    #         print(f'Product Image: "{product.prod_image.url}')
+    #         print(f"Product Price: {product.price}")
+    #         print(f"Product Category: {product.category.name}")
+    #         print(f"Average Rating: {product.average_rating:.2f}")
+    #         print("\n")
+    # else:
+    #     print('No products yet')
 
     # for product in published_products:
     #     print("ID:", product.id)
@@ -57,12 +57,15 @@ def index(request):
         'categories': categories,
         'categories_products': published_products,
         'top_products': products_with_high_ratings,
-        }
-                  )
+        })
 
 
 def store_listing__view(request, cid=None):
     categories = Category.objects.all()
+    products_with_high_ratings = Product.objects.annotate(
+        average_rating=Avg('productreview__ratings')
+        ).filter(productreview__ratings__gt=4)
+    print(products_with_high_ratings)
     if cid:
         print('Cid part is running')
         categories_with_products = Product.objects.filter(category__cid=cid, product_status='publish').prefetch_related(
@@ -72,28 +75,30 @@ def store_listing__view(request, cid=None):
         print('Entered in Else part')
         categories_with_products = Product.objects.filter(product__product_status='publish').prefetch_related(
             'product_set').annotate(average_rating=Avg('productreview__ratings')).order_by('-created_at')
+        
+        
 
-    for product in categories_with_products:
-        print(f"Product Name: {product.title}")
-        print(f"Category Name: {product.category.name}")
+    # for product in categories_with_products:
+    #     print(f"Product Name: {product.title}")
+    #     print(f"Category Name: {product.category.name}")
 
-        # Check if there are reviews and calculate the average
-        if product.average_review is not None:
-            print(f"Average Review: {product.average_review:.2f}")
-        else:
-            print("No reviews available")
+    #     # Check if there are reviews and calculate the average
+    #     if product.average_review is not None:
+    #         print(f"Average Review: {product.average_review:.2f}")
+    #     else:
+    #         print("No reviews available")
 
-        # Check for product colors
-        colors = product.productcolor_set.all()
-        if colors:
-            print("Available Colors:")
-            for color in colors:
-                print(f"- {color.color}")
-        else:
-            print("No colors available")
+    #     # Check for product colors
+    #     colors = product.productcolor_set.all()
+    #     if colors:
+    #         print("Available Colors:")
+    #         for color in colors:
+    #             print(f"- {color.color}")
+    #     else:
+    #         print("No colors available")
 
-        # Include other product details as needed
-        print(f"Price: {product.price}")
+    #     # Include other product details as needed
+    #     print(f"Price: {product.price}")
 
     # Paginator
     category_with_products_per_page = _extracted_from_store_listing__view_20(
@@ -102,6 +107,7 @@ def store_listing__view(request, cid=None):
 
     return render(request, 'coreapp/product-listing.html', context={
         'all_categories': categories,
+        'top_products': products_with_high_ratings,
         'categories_with_products': category_with_products_per_page})
 
 # Paginator Funtion
