@@ -1,9 +1,13 @@
-from django.db import models
+from django.db import models 
+from django.db.models import Count
 from authusers.models import User
 from shortuuid.django_fields import ShortUUIDField
 # import os
 from PIL import Image
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.db import models, IntegrityError
+from django.db.models import F
+from django.db.models.constraints import UniqueConstraint, CheckConstraint
 
 
 
@@ -143,7 +147,7 @@ class ProductImages(models.Model):
 
 class ProductColor(models.Model):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True)
-    color = models.CharField(max_length=10, default='Red')
+    color = models.CharField(unique=True,max_length=10, default='Red', blank=False)
     date = models.DateTimeField(auto_now_add=True)
     
     class Meta: 
